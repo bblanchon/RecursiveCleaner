@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -15,9 +15,9 @@ namespace RecursiveCleaner.Filters
 
         readonly Regex regex;
 
-        public bool IsMatch(string name)
+        public bool IsMatch(FileSystemInfo fsi)
         {
-            return regex.IsMatch(name);
+            return regex.IsMatch(fsi.Name);
         }
     }
 }

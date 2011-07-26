@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using RecursiveCleaner.Filters;
 
 namespace RecursiveCleaner.Scanner
@@ -19,9 +19,9 @@ namespace RecursiveCleaner.Scanner
             Filters = new List<IFilter>();
         }
 
-        public bool IsMatch(string name)
+        public bool IsMatch(FileSystemInfo fsi)
         {
-            return Filters.All(x => x.IsMatch(name));
+            return Filters.All(x => x.IsMatch(fsi));
         }
     }
 }

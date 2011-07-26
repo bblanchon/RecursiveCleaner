@@ -48,14 +48,14 @@ namespace RecursiveCleaner.Scanner
         {
             Log.Debug("Scanning folder {0}", dir.FullName);
 
-            rules = ReadFolderLocalRules(dir).Concat(rules);
+            rules = ReadFolderLocalRules(dir).Concat(rules).ToArray();
 
             var folderRules = rules.Where(x=>x.Target==RuleTarget.Folders || x.Target==RuleTarget.FilesAndFolders);
             var fileRules = rules.Where(x=>x.Target==RuleTarget.Files || x.Target==RuleTarget.FilesAndFolders);
             
             foreach (var subFolder in dir.EnumerateDirectories())
             {
-                var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder.Name));
+                var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
 
                 if( matchingRule != null ) 
                 {
@@ -71,7 +71,7 @@ namespace RecursiveCleaner.Scanner
             {
                 foreach (var file in dir.EnumerateFiles())
                 {
-                    var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file.Name));
+                    var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
 
                     if (matchingRule != null)
                     {

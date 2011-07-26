@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
     <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Filters\OlderThanFilter.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Scanner\RuleAction.cs" />
     <Compile Include="Scanner\RuleTarget.cs" />
