@@ -37,5 +37,6 @@ Source: "bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversi
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, "&", "&&")}}"; Flags: nowait postinstall skipifsilent
+Filename: "{sys}\at.exe"; Parameters:"1981 /EVERY:DAY ""{app}\{#MyAppExeName}"""; Description: "Create a scheduled task"; Flags: postinstall
+
 

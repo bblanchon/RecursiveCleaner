@@ -4,17 +4,15 @@ using System.Linq;
 using System.IO;
 using RecursiveCleaner.Filters;
 
-namespace RecursiveCleaner.Scanner
+namespace RecursiveCleaner.Rules
 {
-    class Rule
+    abstract class RuleBase : IRule
     {
-        public RuleAction Action { get; set; }
-
         public RuleTarget Target { get; set; }
 
         public List<IFilter> Filters { get; private set; }
 
-        public Rule()
+        public RuleBase()
         {
             Filters = new List<IFilter>();
         }
@@ -23,5 +21,7 @@ namespace RecursiveCleaner.Scanner
         {
             return Filters.All(x => x.IsMatch(fsi));
         }
+
+        public abstract void Apply(FileSystemInfo fsi, bool simulation);
     }
 }

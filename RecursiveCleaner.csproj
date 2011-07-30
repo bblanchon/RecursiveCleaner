@@ -60,14 +60,17 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Filters\OlderThanFilter.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Scanner\RuleAction.cs" />
-    <Compile Include="Scanner\RuleTarget.cs" />
+    <Compile Include="Rules\IgnoreRule.cs" />
+    <Compile Include="Rules\RecycleRule.cs" />
+    <Compile Include="Rules\RuleTarget.cs" />
+    <Compile Include="Rules\DeleteRule.cs" />
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filters\RegexFilter.cs" />
-    <Compile Include="Scanner\Rule.cs" />
-    <Compile Include="Scanner\Engine.cs" />
+    <Compile Include="Rules\RuleBase.cs" />
+    <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Scanner.cs" />
     <Compile Include="Imports\Shell32.cs" />
   </ItemGroup>
   <ItemGroup>
