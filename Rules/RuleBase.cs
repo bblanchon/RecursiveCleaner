@@ -10,11 +10,14 @@ namespace RecursiveCleaner.Rules
     {
         public RuleTarget Target { get; set; }
 
-        public List<IFilter> Filters { get; private set; }
+        public bool AppliesToSubfolders { get; set; }
+
+        public List<IFilter> Filters { get; private set; }               
 
         public RuleBase()
         {
             Filters = new List<IFilter>();
+            AppliesToSubfolders = true;
         }
 
         public bool IsMatch(FileSystemInfo fsi)

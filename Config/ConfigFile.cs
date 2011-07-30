@@ -7,6 +7,8 @@ using RecursiveCleaner.Scanner;
 using System.Xml;
 using RecursiveCleaner.Filters;
 using RecursiveCleaner.Rules;
+using System.Linq.Expressions;
+using System.Globalization;
 
 namespace RecursiveCleaner.Config
 {
@@ -55,8 +57,10 @@ namespace RecursiveCleaner.Config
                     return null;
             }
 
-            if (xml.MoveToAttribute("Target"))
-                rule.Target = ParseEnum<RuleTarget>(xml.Value);
+            var attributes = ReadAttributes(xml, "Target", "ApplyToSubfolders");
+
+            ParseAttribute(attributes, "Target", () => rule.Target);
+            ParseAttribute(attributes, "ApplyToSubfolders", () => rule.AppliesToSubfolders);
 
             xml.MoveToContent();
 
@@ -98,12 +102,14 @@ namespace RecursiveCleaner.Config
             if (attributes.Count == 0)
                 throw new Exception("Attribute missing in <OlderThan>");
 
-            var years = attributes.ContainsKey("years") ? int.Parse(attributes["year"]) : 0;
-            var months = attributes.ContainsKey("months") ? int.Parse(attributes["months"]) : 0;
-            var days = attributes.ContainsKey("days") ? int.Parse(attributes["days"]) : 0;
-            var hours = attributes.ContainsKey("hours") ? int.Parse(attributes["hours"]) : 0;
-            var minutes = attributes.ContainsKey("minutes") ? int.Parse(attributes["minutes"]) : 0;
-            var seconds = attributes.ContainsKey("seconds") ? int.Parse(attributes["seconds"]) : 0;
+            int years=0, months=0, days=0, hours=0, minutes=0, seconds=0;
+
+            ParseAttribute(attributes, "years", () => years);
+            ParseAttribute(attributes, "months", () => months);
+            ParseAttribute(attributes, "days", () => days);
+            ParseAttribute(attributes, "hours", () => hours);
+            ParseAttribute(attributes, "minutes", () => minutes);
+            ParseAttribute(attributes, "seconds", () => seconds);
 
             return new OlderThanFilter(years, months, days, hours, minutes, seconds);
         }
@@ -111,8 +117,12 @@ namespace RecursiveCleaner.Config
         private static IFilter ReadRegexFilter(XmlReader xml)
         {
             var attributes = ReadAttributes(xml, "pattern");
+            string pattern = null;
 
-            var pattern = attributes.ContainsKey("pattern") ? attributes["pattern"] : xml.ReadElementContentAsString();
+            ParseAttribute(attributes, "pattern", () => pattern);
+
+            if( string.IsNullOrEmpty(pattern) )
+                pattern = xml.ReadElementContentAsString();
 
             return new RegexFilter(pattern);
         }
@@ -121,9 +131,64 @@ namespace RecursiveCleaner.Config
 
         #region Helpers
 
-        private static T ParseEnum<T>(string value)
+        private static void ParseAttribute<T> (IDictionary<string,string> attributes,
+            string attributeName, Expression<Func<T>> property, bool isRequired=false)
         {
-            return (T)Enum.Parse(typeof(T), value);
+            if (!attributes.ContainsKey(attributeName))
+            {
+                if (isRequired) throw new Exception("Attribute " + attributeName + " is missing");
+                else return;
+            }
+
+            T value;
+            if (TryParse(attributes[attributeName], out value))
+            {
+                var assign = Expression.Assign(property.Body, Expression.Constant(value));
+                Expression.Lambda(assign).Compile().DynamicInvoke();               
+            }
+            else 
+            {
+                throw new FormatException(string.Format(
+                    "\"{0}\" is not a valid value for attribute {1}",
+                    attributes[attributeName], attributeName));
+            }
+        }
+
+        private static bool TryParse<T>(string input, out T value)
+        {           
+            try {
+                if (typeof(T).IsEnum)
+                    value = (T)Enum.Parse(typeof(T), input, true);
+                else
+                    value = (T)Convert.ChangeType(input, typeof(T), CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch( Exception ) {
+                value = default(T);
+                return false;
+            }
+        }
+
+        private static bool TryParseBool(string input, out bool value)
+        {
+            switch (input.Trim().ToLower())
+            {
+                case "yes":
+                case "true":
+                case "1":
+                    value = true;
+                    return true;
+
+                case "no":
+                case "false":
+                case "0":
+                    value = false;
+                    return true;
+
+                default:
+                    value = default(bool);
+                    return false;
+            }
         }
 
         private static IDictionary<string, string> ReadAttributes(XmlReader xml, params string[] expectedAttributes)
@@ -136,15 +201,16 @@ namespace RecursiveCleaner.Config
 
                 do
                 {
-                    var name = xml.Name.ToLower();
+                    var matchingName = expectedAttributes.FirstOrDefault(
+                        x => x.Equals(xml.Name, StringComparison.InvariantCultureIgnoreCase));
 
-                    if (!expectedAttributes.Contains(name))
-                        throw new Exception("Unexpected attribute " + name + " in " + element);
+                    if (matchingName == null)
+                        throw new Exception("Unexpected attribute " + xml.Name + " in " + element);
 
-                    if (results.ContainsKey(name))
-                        throw new Exception("Attribute " + name + " set more than once");
+                    if (results.ContainsKey(matchingName))
+                        throw new Exception("Attribute " + matchingName + " set more than once");
 
-                    results.Add(name, xml.Value);
+                    results.Add(matchingName, xml.Value);
 
                 } while (xml.MoveToNextAttribute());
             }

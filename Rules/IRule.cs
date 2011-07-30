@@ -13,6 +13,8 @@ namespace RecursiveCleaner.Rules
 
         List<IFilter> Filters { get; }
 
+        bool AppliesToSubfolders { set; get; }
+
         bool IsMatch(FileSystemInfo fsi);
 
         void Apply(FileSystemInfo fsi, bool simulation);

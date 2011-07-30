@@ -64,7 +64,7 @@ namespace RecursiveCleaner.Scanner
                 }
                 else
                 {
-                    ScanFolder(subFolder, rules);
+                    ScanFolder(subFolder, rules.Where(x=>x.AppliesToSubfolders));
                 }
             }
 
