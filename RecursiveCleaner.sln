@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecursiveCleaner", "RecursiveCleaner.csproj", "{ED10CA64-D9C1-4D20-A340-F9A4B6D1E1C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecursiveCleaner", "RecursiveCleaner/RecursiveCleaner.csproj", "{ED10CA64-D9C1-4D20-A340-F9A4B6D1E1C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

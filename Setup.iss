@@ -30,7 +30,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "RecursiveCleaner\bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
