@@ -6,6 +6,7 @@
 #define MyAppPublisher "Benoit Blanchon"
 #define MyAppURL "https://code.google.com/p/recursive-cleaner/"
 #define MyAppExeName "RecursiveCleaner.exe"
+#define TaskName "RecursiveCleaner"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -30,13 +31,19 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "RecursiveCleaner\bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\RecursiveCleaner\bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";
+
+[Tasks]
+Name: schtasks; Description: "Create a scheduled task";
 
 [Run]
-Filename: "{sys}\at.exe"; Parameters:"1981 /EVERY:DAY ""{app}\{#MyAppExeName}"""; Description: "Create a scheduled task"; Flags: postinstall
+StatusMsg: "Deleting existing task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Delete /F /TN ""{#TaskName}"""; Flags: runhidden runascurrentuser; Tasks: schtasks;
+StatusMsg: "Creating scheduled task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Create /RU SYSTEM /SC ONIDLE /I 15 /TN ""{#TaskName}"" /TR ""{app}\{#MyAppExeName}"""; Flags: runascurrentuser runhidden; Tasks: schtasks;
 
+[UninstallRun]
+StatusMsg: "Deleting scheduled task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Delete /F /TN ""{#TaskName}"""; Flags: runhidden runascurrentuser; Tasks: schtasks;
 
