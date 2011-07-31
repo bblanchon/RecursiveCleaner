@@ -12,7 +12,9 @@ namespace RecursiveCleaner
 
         public bool ScanAllFixedDrives { private set; get; }
 
-        public LogLevel LogLevel { private set; get;}
+        public LogLevel LogLevel { get; private set; }
+
+        public bool LogToEventLog { get; private set; }
 
         public List<DirectoryInfo> Folders { private set; get; }
 
@@ -25,8 +27,11 @@ namespace RecursiveCleaner
             {
                 switch (arg)
                 {
-                    case "-v":
-                        LogLevel = LogLevel.Debug;
+                    case "-a":
+                        ScanAllFixedDrives = true;
+                        break;
+                    case "-e":
+                        LogToEventLog = true;
                         break;
                     case "-q":
                         LogLevel = LogLevel.Warning;
@@ -34,8 +39,8 @@ namespace RecursiveCleaner
                     case "-s":
                         SimulationMode = true;
                         break;
-                    case "-a":
-                        ScanAllFixedDrives = true;
+                    case "-v":
+                        LogLevel = LogLevel.Debug;
                         break;
                     default:
                         Folders.Add(new DirectoryInfo(arg));

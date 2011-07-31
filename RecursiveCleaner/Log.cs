@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace RecursiveCleaner
 {
@@ -16,12 +17,8 @@ namespace RecursiveCleaner
     static class Log
     {
         public static LogLevel Filter = LogLevel.Debug;
-
-        private static void Print(LogLevel level, string format, params object[] args)
-        {
-            if (level <= Filter) 
-                Console.WriteLine(level+": "+format, args);
-        }        
+        public static bool LogToConsole = true;
+        public static bool LogToEventLog = false;
 
         public static void Error(string format, params object[] args)
         {
@@ -42,5 +39,31 @@ namespace RecursiveCleaner
         {
             Print(LogLevel.Debug, format, args);
         }
+
+        #region Private part
+
+        const string EventSource = "RecursiveCleaner";
+
+        private static void Print(LogLevel level, string format, params object[] args)
+        {
+            if (level <= Filter)
+            {
+                var s = string.Format(format, args);
+
+                if (LogToConsole) Console.WriteLine(s);
+                if (LogToEventLog) EventLog.WriteEntry(EventSource, s, levelMap[level], 1);
+            }
+        } 
+
+        static Dictionary<LogLevel,EventLogEntryType> levelMap = 
+            new Dictionary<LogLevel,EventLogEntryType>
+            {
+                { LogLevel.Error, EventLogEntryType.Error },
+                { LogLevel.Warning, EventLogEntryType.Warning },
+                { LogLevel.Info, EventLogEntryType.Information },
+                { LogLevel.Debug, EventLogEntryType.Information },
+            };
+
+        #endregion
     }
 }

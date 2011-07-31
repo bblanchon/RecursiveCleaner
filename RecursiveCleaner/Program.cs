@@ -13,6 +13,7 @@ namespace RecursiveCleaner
             var cmdLine = new CommandLine(args);
 
             Log.Filter = cmdLine.LogLevel;
+            Log.LogToEventLog = cmdLine.LogToEventLog;
 
             var scanner = new Engine();            
 
@@ -21,6 +22,8 @@ namespace RecursiveCleaner
 #else
             scanner.IsSimulating = true;
 #endif
+
+            Log.Info("Started with arguments: {0}", string.Join(" ",args));
 
             if (cmdLine.ScanAllFixedDrives)
             {
@@ -34,8 +37,10 @@ namespace RecursiveCleaner
 
             if( !cmdLine.Folders.Any() && !cmdLine.ScanAllFixedDrives )
             {
-                Log.Error("No folder specified (you may also try option -a).");
+                Log.Error("No folder specified (you may also try option -a).");      
             }
+
+            Log.Info("Terminated");
 
 #if DEBUG
             Console.WriteLine("-- PRESS ENTER TO CLOSE --");
