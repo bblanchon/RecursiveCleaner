@@ -10,6 +10,8 @@ namespace RecursiveCleaner
     {
         public bool SimulationMode { private set; get; }
 
+        public bool ScanAllFixedDrives { private set; get; }
+
         public LogLevel LogLevel { private set; get;}
 
         public List<DirectoryInfo> Folders { private set; get; }
@@ -31,6 +33,9 @@ namespace RecursiveCleaner
                         break;
                     case "-s":
                         SimulationMode = true;
+                        break;
+                    case "-a":
+                        ScanAllFixedDrives = true;
                         break;
                     default:
                         Folders.Add(new DirectoryInfo(arg));

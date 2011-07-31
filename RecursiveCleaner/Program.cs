@@ -22,8 +22,20 @@ namespace RecursiveCleaner
             scanner.IsSimulating = true;
 #endif
 
-            foreach( var folder in cmdLine.Folders )
+            if (cmdLine.ScanAllFixedDrives)
+            {
+                foreach (var drive in DriveInfo.GetDrives())
+                    if (drive.DriveType == DriveType.Fixed && drive.IsReady )
+                        scanner.ScanFolder(drive.RootDirectory);
+            }
+
+            foreach (var folder in cmdLine.Folders)
                 scanner.ScanFolder(folder);
+
+            if( !cmdLine.Folders.Any() && !cmdLine.ScanAllFixedDrives )
+            {
+                Log.Error("No folder specified (you may also try option -a).");
+            }
 
 #if DEBUG
             Console.WriteLine("-- PRESS ENTER TO CLOSE --");

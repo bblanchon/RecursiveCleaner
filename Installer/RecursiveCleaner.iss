@@ -42,7 +42,7 @@ Name: schtasks; Description: "Create a scheduled task";
 
 [Run]
 StatusMsg: "Deleting existing task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Delete /F /TN ""{#TaskName}"""; Flags: runhidden runascurrentuser; Tasks: schtasks;
-StatusMsg: "Creating scheduled task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Create /RU SYSTEM /SC ONIDLE /I 15 /TN ""{#TaskName}"" /TR ""{app}\{#MyAppExeName}"""; Flags: runascurrentuser runhidden; Tasks: schtasks;
+StatusMsg: "Creating scheduled task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Create /RU SYSTEM /SC ONIDLE /I 15 /TN ""{#TaskName}"" /TR ""{app}\{#MyAppExeName} -a"""; Flags: runascurrentuser runhidden; Tasks: schtasks;
 
 [UninstallRun]
 StatusMsg: "Deleting scheduled task..."; Filename: "{sys}\schtasks.exe"; Parameters:"/Delete /F /TN ""{#TaskName}"""; Flags: runhidden runascurrentuser; Tasks: schtasks;
