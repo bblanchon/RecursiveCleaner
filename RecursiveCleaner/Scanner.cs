@@ -63,36 +63,43 @@ namespace RecursiveCleaner.Scanner
         {
             Log.Debug("Scanning folder {0}", dir.FullName);
 
-            rules = ReadFolderLocalRules(dir).Concat(rules).ToArray();
-
-            var folderRules = rules.Where(x=>x.Target==RuleTarget.Folders || x.Target==RuleTarget.FilesAndFolders);
-            var fileRules = rules.Where(x=>x.Target==RuleTarget.Files || x.Target==RuleTarget.FilesAndFolders);
-            
-            foreach (var subFolder in dir.EnumerateDirectories())
+            try
             {
-                var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
+                rules = ReadFolderLocalRules(dir).Concat(rules).ToArray();
 
-                if( matchingRule != null ) 
-                {
-                    matchingRule.Apply(subFolder, IsSimulating);
-                }
-                else
-                {
-                    ScanFolder(subFolder, rules.Where(x=>x.AppliesToSubfolders));
-                }
-            }
+                var folderRules = rules.Where(x => x.Target == RuleTarget.Folders || x.Target == RuleTarget.FilesAndFolders);
+                var fileRules = rules.Where(x => x.Target == RuleTarget.Files || x.Target == RuleTarget.FilesAndFolders);
 
-            if (fileRules.Any())
-            {
-                foreach (var file in dir.EnumerateFiles())
+                foreach (var subFolder in dir.EnumerateDirectories())
                 {
-                    var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
+                    var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
 
                     if (matchingRule != null)
                     {
-                        matchingRule.Apply(file, IsSimulating);
+                        matchingRule.Apply(subFolder, IsSimulating);
+                    }
+                    else
+                    {
+                        ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders));
                     }
                 }
+
+                if (fileRules.Any())
+                {
+                    foreach (var file in dir.EnumerateFiles())
+                    {
+                        var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
+
+                        if (matchingRule != null)
+                        {
+                            matchingRule.Apply(file, IsSimulating);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Warning("Failed to scan folder {0}: {1}", dir.FullName, e.Message);
             }
         }           
     }
