@@ -19,7 +19,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using RecursiveCleaner.Scanner;
+using RecursiveCleaner.Engine;
 
 namespace RecursiveCleaner
 {
@@ -32,7 +32,7 @@ namespace RecursiveCleaner
             Log.Filter = cmdLine.LogLevel;
             Log.LogToEventLog = cmdLine.LogToEventLog;
 
-            var scanner = new Engine();            
+            var scanner = new Scanner();            
 
 #if !DEBUG
             scanner.IsSimulating = cmdLine.SimulationMode;

@@ -23,11 +23,12 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
-using RecursiveCleaner.Filters;
-using RecursiveCleaner.Rules;
 
-namespace RecursiveCleaner.Config
+namespace RecursiveCleaner.Engine.Config
 {
+    using Filters;
+    using Rules;
+
     class ConfigFileReader
     {
         public static readonly string Filename = "RecursiveCleaner.config"; 

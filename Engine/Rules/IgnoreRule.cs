@@ -17,22 +17,14 @@
  */
 
 using System.IO;
-using System.Text.RegularExpressions;
 
-namespace RecursiveCleaner.Filters
+namespace RecursiveCleaner.Engine.Rules
 {
-    class RegexFilter : IFilter
+    class IgnoreRule : RuleBase
     {
-        public RegexFilter(string pattern)
+        public override void Apply(FileSystemInfo fsi, bool simulation)
         {
-            regex = new Regex(pattern, RegexOptions.Compiled);
-        }
-
-        readonly Regex regex;
-
-        public bool IsMatch(FileSystemInfo fsi)
-        {
-            return regex.IsMatch(fsi.Name);
+            Log.Info("Ignore {0}", fsi.FullName);
         }
     }
 }

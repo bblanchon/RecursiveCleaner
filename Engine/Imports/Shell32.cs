@@ -19,7 +19,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace RecursiveCleaner.Imports
+namespace RecursiveCleaner.Engine.Imports
 {
     class Shell32
     {

@@ -8,7 +8,7 @@
     <ProjectGuid>{ED10CA64-D9C1-4D20-A340-F9A4B6D1E1C5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecursiveCleaner</RootNamespace>
+    <RootNamespace>RecursiveCleaner.Engine</RootNamespace>
     <AssemblyName>RecursiveCleaner</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -57,26 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
-    <Compile Include="Config\AttributeParser.cs" />
-    <Compile Include="Config\ConfigFileReader.cs" />
-    <Compile Include="Config\IgnoredElementException.cs" />
-    <Compile Include="Config\UnknownAttributesException.cs" />
-    <Compile Include="Filters\ExcludeFilter.cs" />
-    <Compile Include="Filters\OlderThanFilter.cs" />
-    <Compile Include="Filters\WildcardsFilter.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="Rules\IgnoreRule.cs" />
-    <Compile Include="Rules\RecycleRule.cs" />
-    <Compile Include="Rules\RuleTarget.cs" />
-    <Compile Include="Rules\DeleteRule.cs" />
-    <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Filters\RegexFilter.cs" />
-    <Compile Include="Rules\RuleBase.cs" />
-    <Compile Include="Rules\IRule.cs" />
-    <Compile Include="Scanner.cs" />
-    <Compile Include="Imports\Shell32.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RecursiveCleaner.config">
@@ -105,6 +87,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{54819D6A-8908-4349-8454-8D303895547C}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

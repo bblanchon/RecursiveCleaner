@@ -20,25 +20,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 
-namespace RecursiveCleaner.Filters
+namespace RecursiveCleaner.Engine.Config
 {
-    class ExcludeFilter : IFilter
+    class IgnoredElementException : Exception
     {
-        public ExcludeFilter(IEnumerable<IFilter> innerFilters)
+        public IgnoredElementException(string elementName)
+            : base(string.Format("Ignoring element <{0}>", elementName))
         {
-            InnerFilters = new List<IFilter>(innerFilters);
-        }
-
-        public bool IsMatch(FileSystemInfo fsi)
-        {
-            return !InnerFilters.Any(x => x.IsMatch(fsi));
-        }
-
-        public IEnumerable<IFilter> InnerFilters
-        {
-            get; private set;
         }
     }
 }

@@ -16,15 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+using System;
 using System.IO;
 
-namespace RecursiveCleaner.Rules
+namespace RecursiveCleaner.Engine.Rules
 {
-    class IgnoreRule : RuleBase
+    class DeleteRule : RuleBase
     {
         public override void Apply(FileSystemInfo fsi, bool simulation)
         {
-            Log.Info("Ignore {0}", fsi.FullName);
-        }
+            if (!simulation)
+            {
+                try
+                {
+                    fsi.Delete();
+                    Log.Info("Delete {0}... OK", fsi.FullName);
+                }
+                catch (Exception e)
+                {
+                    Log.Warning("Delete {0}... {1}", fsi.FullName, e.Message);
+                }
+            }
+            else
+            {
+                Log.Info("Delete {0}", fsi.FullName);
+            }
+        }     
     }
 }

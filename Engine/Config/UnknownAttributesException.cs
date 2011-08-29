@@ -20,20 +20,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
-namespace RecursiveCleaner.Filters
+namespace RecursiveCleaner.Engine.Config
 {
-    class WildcardsFilter : RegexFilter
+    class UnknownAttributesException : Exception
     {
-        public WildcardsFilter(string pattern)
-            : base(BuildRegexPattern(pattern))
+        public UnknownAttributesException(IEnumerable<string> names)
+            : base("Unknown attribute(s): "+string.Join(", ", names))
         {
-        }
 
-        static string BuildRegexPattern(string pattern)
-        {
-            return "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
         }
     }
 }

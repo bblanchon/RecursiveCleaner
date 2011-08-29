@@ -16,32 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using RecursiveCleaner.Filters;
 
-namespace RecursiveCleaner.Rules
+namespace RecursiveCleaner.Engine.Filters
 {
-    abstract class RuleBase : IRule
+    interface IFilter
     {
-        public RuleTarget Target { get; set; }
-
-        public bool AppliesToSubfolders { get; set; }
-
-        public List<IFilter> Filters { get; private set; }               
-
-        public RuleBase()
-        {
-            Filters = new List<IFilter>();
-            AppliesToSubfolders = true;
-        }
-
-        public bool IsMatch(FileSystemInfo fsi)
-        {
-            return Filters.All(x => x.IsMatch(fsi));
-        }
-
-        public abstract void Apply(FileSystemInfo fsi, bool simulation);
+        bool IsMatch(FileSystemInfo fsi);
     }
 }

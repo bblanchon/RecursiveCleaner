@@ -16,18 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace RecursiveCleaner.Config
+namespace RecursiveCleaner.Engine.Rules
 {
-    class IgnoredElementException : Exception
+    enum RuleTarget
     {
-        public IgnoredElementException(string elementName)
-            : base(string.Format("Ignoring element <{0}>", elementName))
-        {
-        }
+        Folders,
+        Files,        
+        FilesAndFolders,
     }
 }

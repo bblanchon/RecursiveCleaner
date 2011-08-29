@@ -16,22 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+using System;
 using System.Collections.Generic;
-using System.IO;
-using RecursiveCleaner.Filters;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
-namespace RecursiveCleaner.Rules
+namespace RecursiveCleaner.Engine.Filters
 {
-    interface IRule
+    class WildcardsFilter : RegexFilter
     {
-        RuleTarget Target { get; set; }
+        public WildcardsFilter(string pattern)
+            : base(BuildRegexPattern(pattern))
+        {
+        }
 
-        List<IFilter> Filters { get; }
-
-        bool AppliesToSubfolders { set; get; }
-
-        bool IsMatch(FileSystemInfo fsi);
-
-        void Apply(FileSystemInfo fsi, bool simulation);
+        static string BuildRegexPattern(string pattern)
+        {
+            return "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
+        }
     }
 }

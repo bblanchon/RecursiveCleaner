@@ -16,12 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-namespace RecursiveCleaner.Rules
+using System;
+using System.IO;
+using System.Linq;
+
+namespace RecursiveCleaner.Engine.Filters
 {
-    enum RuleTarget
+    class OlderThanFilter : IFilter
     {
-        Folders,
-        Files,        
-        FilesAndFolders,
+        readonly TimeSpan span;
+
+        public OlderThanFilter(int years, int months, int days, int hours, int minutes, int seconds)
+        {
+            span = new TimeSpan(years * 365 + months * 30 + days, hours, minutes, seconds);
+        }
+
+        public bool IsMatch(FileSystemInfo fsi)
+        {
+            if (fsi is DirectoryInfo)
+            {
+                var newest = (fsi as DirectoryInfo).EnumerateFiles("*", SearchOption.AllDirectories).Max(x => x.LastWriteTime);
+
+                return newest + span < DateTime.Now;
+            }
+            else
+            {
+                return fsi.LastWriteTime + span < DateTime.Now;
+            }
+        }
     }
 }

@@ -20,12 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RecursiveCleaner.Config;
-using RecursiveCleaner.Rules;
+using RecursiveCleaner.Engine.Config;
+using RecursiveCleaner.Engine.Rules;
 
-namespace RecursiveCleaner.Scanner
+namespace RecursiveCleaner.Engine
 {
-    class Engine
+    public class Scanner
     {
         public bool IsSimulating { get; set; }
 
@@ -59,7 +59,7 @@ namespace RecursiveCleaner.Scanner
             }            
         }
 
-        public void ScanFolder(DirectoryInfo dir, IEnumerable<IRule> rules)
+        void ScanFolder(DirectoryInfo dir, IEnumerable<IRule> rules)
         {
             Log.Debug("Scanning folder {0}", dir.FullName);
 

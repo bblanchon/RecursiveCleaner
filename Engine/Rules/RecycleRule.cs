@@ -16,32 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-using System;
 using System.IO;
-using System.Linq;
+using System.Runtime.InteropServices;
+using RecursiveCleaner.Engine.Imports;
 
-namespace RecursiveCleaner.Filters
+namespace RecursiveCleaner.Engine.Rules
 {
-    class OlderThanFilter : IFilter
+    class RecycleRule : RuleBase
     {
-        readonly TimeSpan span;
-
-        public OlderThanFilter(int years, int months, int days, int hours, int minutes, int seconds)
+        public override void Apply(FileSystemInfo fsi, bool simulation)
         {
-            span = new TimeSpan(years * 365 + months * 30 + days, hours, minutes, seconds);
-        }
+            var path = fsi.FullName;
 
-        public bool IsMatch(FileSystemInfo fsi)
-        {
-            if (fsi is DirectoryInfo)
+            if (!simulation)
             {
-                var newest = (fsi as DirectoryInfo).EnumerateFiles("*", SearchOption.AllDirectories).Max(x => x.LastWriteTime);
+                var shf = new Shell32.SHFILEOPSTRUCT();
+                shf.wFunc = Shell32.FO_Func.FO_DELETE;
+                shf.fFlags = Shell32.FOF_ALLOWUNDO | Shell32.FOF_NO_UI;
+                shf.pFrom = Marshal.StringToHGlobalUni(path + '\0');
+                var ret = Shell32.SHFileOperation(ref shf);
 
-                return newest + span < DateTime.Now;
+                if (ret == 0)
+                    Log.Warning("Recycle {0}... Error #{1}", path, ret);
+                else
+                    Log.Info("Recycle {0}... OK", path);
             }
             else
             {
-                return fsi.LastWriteTime + span < DateTime.Now;
+                Log.Info("Recycle {0}", path);
             }
         }
     }

@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace RecursiveCleaner
+namespace RecursiveCleaner.Engine
 {
-    enum LogLevel
+    public enum LogLevel
     {
         Error,
         Warning,
@@ -30,7 +30,7 @@ namespace RecursiveCleaner
         Debug,
     }
 
-    static class Log
+    public static class Log
     {
         public static LogLevel Filter = LogLevel.Debug;
         public static bool LogToConsole = true;

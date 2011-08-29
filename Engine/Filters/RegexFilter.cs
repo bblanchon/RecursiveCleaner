@@ -16,31 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
-namespace RecursiveCleaner.Rules
+namespace RecursiveCleaner.Engine.Filters
 {
-    class DeleteRule : RuleBase
+    class RegexFilter : IFilter
     {
-        public override void Apply(FileSystemInfo fsi, bool simulation)
+        public RegexFilter(string pattern)
         {
-            if (!simulation)
-            {
-                try
-                {
-                    fsi.Delete();
-                    Log.Info("Delete {0}... OK", fsi.FullName);
-                }
-                catch (Exception e)
-                {
-                    Log.Warning("Delete {0}... {1}", fsi.FullName, e.Message);
-                }
-            }
-            else
-            {
-                Log.Info("Delete {0}", fsi.FullName);
-            }
-        }     
+            regex = new Regex(pattern, RegexOptions.Compiled);
+        }
+
+        readonly Regex regex;
+
+        public bool IsMatch(FileSystemInfo fsi)
+        {
+            return regex.IsMatch(fsi.Name);
+        }
     }
 }

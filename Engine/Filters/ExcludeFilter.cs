@@ -20,15 +20,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
-namespace RecursiveCleaner.Config
+namespace RecursiveCleaner.Engine.Filters
 {
-    class UnknownAttributesException : Exception
+    class ExcludeFilter : IFilter
     {
-        public UnknownAttributesException(IEnumerable<string> names)
-            : base("Unknown attribute(s): "+string.Join(", ", names))
+        public ExcludeFilter(IEnumerable<IFilter> innerFilters)
         {
+            InnerFilters = new List<IFilter>(innerFilters);
+        }
 
+        public bool IsMatch(FileSystemInfo fsi)
+        {
+            return !InnerFilters.Any(x => x.IsMatch(fsi));
+        }
+
+        public IEnumerable<IFilter> InnerFilters
+        {
+            get; private set;
         }
     }
 }

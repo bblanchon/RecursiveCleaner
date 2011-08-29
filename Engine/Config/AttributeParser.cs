@@ -18,13 +18,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Linq.Expressions;
 using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Xml;
 
-namespace RecursiveCleaner.Config
+namespace RecursiveCleaner.Engine.Config
 {
     class AttributeParser
     {
