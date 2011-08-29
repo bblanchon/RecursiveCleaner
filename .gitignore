@@ -5,3 +5,5 @@
 /RecursiveCleaner/obj
 /Engine/bin
 /Engine/obj
+/Tests/obj
+/Tests/bin
