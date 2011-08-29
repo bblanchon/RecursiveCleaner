@@ -61,6 +61,7 @@
     <Compile Include="Config\ConfigFileReader.cs" />
     <Compile Include="Config\IgnoredElementException.cs" />
     <Compile Include="Config\UnknownAttributesException.cs" />
+    <Compile Include="Filters\ExcludeFilter.cs" />
     <Compile Include="Filters\OlderThanFilter.cs" />
     <Compile Include="Filters\WildcardsFilter.cs" />
     <Compile Include="Log.cs" />

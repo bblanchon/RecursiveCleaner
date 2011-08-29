@@ -93,15 +93,7 @@ namespace RecursiveCleaner.Config
             attributes.AssertNoUnused();
 
             xml.MoveToContent();
-
-            while (xml.Read() && xml.NodeType != XmlNodeType.EndElement)
-            {
-                if (xml.NodeType == XmlNodeType.Element)
-                {
-                    var filter = ReadFilter(xml);
-                    if (filter != null) rule.Filters.Add(filter);
-                }
-            }
+            rule.Filters.AddRange(ReadFilters(xml));            
 
             return rule;
         }
@@ -110,27 +102,50 @@ namespace RecursiveCleaner.Config
 
         #region Filter reading
 
-        private static IFilter ReadFilter(XmlReader xml)
+        private static IEnumerable<IFilter> ReadFilters(XmlReader xml)
         {
-            switch (xml.Name)
+            while (xml.Read() && xml.NodeType != XmlNodeType.EndElement)
             {
-                case "Regex":
-                    return ReadRegexFilter(xml);
-                case "OlderThan":
-                    return ReadOlderThanFilter(xml);
-                case "Wildcards":
-                    return ReadWildcardsFilter(xml);
-                default:
-                    Log.Warning("Ignoring element <{0}>", xml.Name);
-                    xml.Skip();
-                    return null;
+                if (xml.NodeType == XmlNodeType.Element)
+                {
+                    yield return ReadFilter(xml);
+                }
             }
         }
 
-        private static IFilter ReadOlderThanFilter(XmlReader xml)
+        private static IFilter ReadFilter(XmlReader xml)
         {
+            var elementName = xml.Name;
             var attributes = new AttributeParser(xml);
 
+            IFilter filter = null;
+
+            switch (elementName.ToLower())
+            {
+                case "regex":
+                    filter = ReadRegexFilter(xml, attributes);
+                    break;
+                case "olderthan":
+                    filter = ReadOlderThanFilter(xml, attributes);
+                    break;
+                case "wildcards":
+                    filter = ReadWildcardsFilter(xml, attributes);
+                    break;
+                case "exclude":
+                    filter = ReadExcludeFilter(xml, attributes);
+                    break;
+                default:                    
+                    xml.Skip();
+                    throw new IgnoredElementException(elementName);
+            }
+
+            attributes.AssertNoUnused();
+
+            return filter;
+        }
+
+        private static IFilter ReadOlderThanFilter(XmlReader xml, AttributeParser attributes)
+        {
             if (attributes.Count == 0)
                 throw new Exception("Attribute missing in <OlderThan>");
 
@@ -141,19 +156,16 @@ namespace RecursiveCleaner.Config
             attributes.Get("days", () => days);
             attributes.Get("hours", () => hours);
             attributes.Get("minutes", () => minutes);
-            attributes.Get("seconds", () => seconds);
-            attributes.AssertNoUnused();
+            attributes.Get("seconds", () => seconds);            
 
             return new OlderThanFilter(years, months, days, hours, minutes, seconds);
         }
 
-        private static IFilter ReadRegexFilter(XmlReader xml)
+        private static IFilter ReadRegexFilter(XmlReader xml, AttributeParser attributes)
         {
-            var attributes = new AttributeParser(xml);
             string pattern = null;
 
             attributes.Get("pattern", () => pattern);
-            attributes.AssertNoUnused();
 
             if( string.IsNullOrEmpty(pattern) )
                 pattern = xml.ReadElementContentAsString();
@@ -161,18 +173,23 @@ namespace RecursiveCleaner.Config
             return new RegexFilter(pattern);
         }
 
-        private static IFilter ReadWildcardsFilter(XmlReader xml)
+        private static IFilter ReadWildcardsFilter(XmlReader xml, AttributeParser attributes)
         {
-            var attributes = new AttributeParser(xml);
             string pattern = null;
 
             attributes.Get("pattern", () => pattern);
-            attributes.AssertNoUnused();
 
             if (string.IsNullOrEmpty(pattern))
                 pattern = xml.ReadElementContentAsString();
 
             return new WildcardsFilter(pattern);
+        }
+
+        private static IFilter ReadExcludeFilter(XmlReader xml, AttributeParser attributes)
+        {
+            xml.MoveToContent();
+            var innerFilters = ReadFilters(xml);
+            return new ExcludeFilter(innerFilters);
         }
 
         #endregion       
