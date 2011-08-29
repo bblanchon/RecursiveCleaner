@@ -28,12 +28,14 @@ using RecursiveCleaner.Rules;
 
 namespace RecursiveCleaner.Config
 {
-    class ConfigFile
+    class ConfigFileReader
     {
         public static readonly string Filename = "RecursiveCleaner.config"; 
-
+        
         public static IEnumerable<IRule> Read(string path)
         {
+            var rules = new List<IRule> ();
+
             using (var xml = XmlReader.Create(path))
             {
                 if( ! xml.ReadToFollowing("RecursiveCleaner") )
@@ -43,19 +45,21 @@ namespace RecursiveCleaner.Config
                 {
                     if (xml.NodeType == XmlNodeType.Element)
                     {
-                        IRule rule = null;
                         try
                         {
-                            rule = ReadRule(xml);
+                            rules.Add(ReadRule(xml));
                         }
                         catch (Exception e)
                         {
                             Log.Warning("{0} (line {1}): {2}", path, (xml as IXmlLineInfo).LineNumber, e.Message); 
                         }
-                        if (rule != null) yield return rule;
                     }
                 }             
             }
+
+            if (rules.Count == 0) Log.Warning("{0}: file doesn't contain any rule", path);
+
+            return rules;
         }
 
         #region Rule reading

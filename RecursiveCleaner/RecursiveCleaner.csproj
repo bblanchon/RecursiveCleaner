@@ -58,7 +58,7 @@
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
     <Compile Include="Config\AttributeParser.cs" />
-    <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Config\ConfigFileReader.cs" />
     <Compile Include="Config\IgnoredElementException.cs" />
     <Compile Include="Config\UnknownAttributesException.cs" />
     <Compile Include="Filters\OlderThanFilter.cs" />

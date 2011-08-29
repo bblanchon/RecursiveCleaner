@@ -43,14 +43,14 @@ namespace RecursiveCleaner.Scanner
 
         IEnumerable<IRule> ReadFolderLocalRules(DirectoryInfo folder)
         {
-            var configPath = Path.Combine(folder.FullName, ConfigFile.Filename);
+            var configPath = Path.Combine(folder.FullName, ConfigFileReader.Filename);
 
             if (!File.Exists(configPath))return Enumerable.Empty<IRule>();
             
             Log.Info("Found {0}", configPath);
             try
             {
-                return ConfigFile.Read(configPath);
+                return ConfigFileReader.Read(configPath);
             }
             catch (Exception e)
             {
