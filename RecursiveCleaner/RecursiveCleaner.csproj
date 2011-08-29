@@ -59,6 +59,7 @@
     <Compile Include="CommandLine.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Filters\OlderThanFilter.cs" />
+    <Compile Include="Filters\WildcardsFilter.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Rules\IgnoreRule.cs" />
     <Compile Include="Rules\RecycleRule.cs" />

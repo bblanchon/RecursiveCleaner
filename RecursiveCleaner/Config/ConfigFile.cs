@@ -104,6 +104,8 @@ namespace RecursiveCleaner.Config
                     return ReadRegexFilter(xml);
                 case "OlderThan":
                     return ReadOlderThanFilter(xml);
+                case "Wildcards":
+                    return ReadWildcardsFilter(xml);
                 default:
                     Log.Warning("Ignoring element <{0}>", xml.Name);
                     xml.Skip();
@@ -141,6 +143,19 @@ namespace RecursiveCleaner.Config
                 pattern = xml.ReadElementContentAsString();
 
             return new RegexFilter(pattern);
+        }
+
+        private static IFilter ReadWildcardsFilter(XmlReader xml)
+        {
+            var attributes = ReadAttributes(xml, "pattern");
+            string pattern = null;
+
+            ParseAttribute(attributes, "pattern", () => pattern);
+
+            if (string.IsNullOrEmpty(pattern))
+                pattern = xml.ReadElementContentAsString();
+
+            return new WildcardsFilter(pattern);
         }
 
         #endregion
