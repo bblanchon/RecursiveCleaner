@@ -14,6 +14,23 @@ namespace RecursiveCleaner.Tests.Helpers
             FileInfo.Create().Close();
         }
 
+        public string Contents
+        {
+            set
+            {
+                File.WriteAllText(Path, value);
+            }
+            get
+            {
+                return File.ReadAllText(Path);
+            }
+        }
+
+        public string Path
+        {
+            get { return FileInfo.FullName; }
+        }
+
         public FileInfo FileInfo
         {
             get;

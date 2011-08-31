@@ -11,10 +11,9 @@ namespace RecursiveCleaner.Tests.Helpers
         bool exists = true;
         readonly string name;
 
-        public DummyFile(string name)
+        public DummyFile(string name="tmpfile.tmp")
         {
             this.name = name;
-
         }
 
         public override void Delete()

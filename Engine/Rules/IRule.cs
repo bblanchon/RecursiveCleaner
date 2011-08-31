@@ -26,7 +26,7 @@ namespace RecursiveCleaner.Engine.Rules
     {
         RuleTarget Target { get; set; }
 
-        List<IFilter> Filters { get; }
+        IFilter Filter { get; set; }
 
         bool AppliesToSubfolders { set; get; }
 

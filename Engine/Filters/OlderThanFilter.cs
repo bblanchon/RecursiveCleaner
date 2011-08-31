@@ -24,11 +24,15 @@ namespace RecursiveCleaner.Engine.Filters
 {
     class OlderThanFilter : IFilter
     {
-        readonly TimeSpan span;
-
         public OlderThanFilter(int years, int months, int days, int hours, int minutes, int seconds)
         {
-            span = new TimeSpan(years * 365 + months * 30 + days, hours, minutes, seconds);
+            TimeSpan = new TimeSpan(years * 365 + months * 30 + days, hours, minutes, seconds);
+        }
+
+        public TimeSpan TimeSpan
+        {
+            get;
+            private set;
         }
 
         public bool IsMatch(FileSystemInfo fsi)
@@ -37,11 +41,11 @@ namespace RecursiveCleaner.Engine.Filters
             {
                 var newest = (fsi as DirectoryInfo).EnumerateFiles("*", SearchOption.AllDirectories).Max(x => x.LastWriteTime);
 
-                return newest + span < DateTime.Now;
+                return newest + TimeSpan < DateTime.Now;
             }
             else
             {
-                return fsi.LastWriteTime + span < DateTime.Now;
+                return fsi.LastWriteTime + TimeSpan < DateTime.Now;
             }
         }
     }

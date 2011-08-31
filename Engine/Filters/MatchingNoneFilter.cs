@@ -24,21 +24,11 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
-    class ExcludeFilter : IFilter
+    class MatchingNoneFilter : ParentFilter
     {
-        public ExcludeFilter(IEnumerable<IFilter> innerFilters)
+        public override bool IsMatch(FileSystemInfo fsi)
         {
-            InnerFilters = new List<IFilter>(innerFilters);
-        }
-
-        public bool IsMatch(FileSystemInfo fsi)
-        {
-            return !InnerFilters.Any(x => x.IsMatch(fsi));
-        }
-
-        public IEnumerable<IFilter> InnerFilters
-        {
-            get; private set;
+            return !Children.Any(x => x.IsMatch(fsi));
         }
     }
 }

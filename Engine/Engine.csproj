@@ -45,9 +45,13 @@
     <Compile Include="Config\ConfigFileReader.cs" />
     <Compile Include="Config\IgnoredElementException.cs" />
     <Compile Include="Config\UnknownAttributesException.cs" />
-    <Compile Include="Filters\ExcludeFilter.cs" />
+    <Compile Include="Filters\DelegateFilter.cs" />
+    <Compile Include="Filters\MatchingAnyFilter.cs" />
+    <Compile Include="Filters\MatchingAllFilter.cs" />
+    <Compile Include="Filters\MatchingNoneFilter.cs" />
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Filters\OlderThanFilter.cs" />
+    <Compile Include="Filters\ParentFilter.cs" />
     <Compile Include="Filters\RegexFilter.cs" />
     <Compile Include="Filters\WildcardsFilter.cs" />
     <Compile Include="Imports\Shell32.cs" />

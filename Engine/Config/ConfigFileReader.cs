@@ -32,7 +32,7 @@ namespace RecursiveCleaner.Engine.Config
     class ConfigFileReader
     {
         public static readonly string Filename = "RecursiveCleaner.config"; 
-        
+
         public static IEnumerable<IRule> Read(string path)
         {
             var rules = new List<IRule> ();
@@ -71,15 +71,15 @@ namespace RecursiveCleaner.Engine.Config
 
             var elementName = xml.Name;
 
-            switch (elementName)
+            switch (elementName.ToLower())
             {
-                case "Recycle":
+                case "recycle":
                     rule = new RecycleRule();                    
                     break;
-                case "Delete":
+                case "delete":
                     rule = new DeleteRule();
                     break;
-                case "Ignore":
+                case "ignore":
                     rule = new IgnoreRule();
                     break;
                 default:                    
@@ -93,8 +93,12 @@ namespace RecursiveCleaner.Engine.Config
             attributes.Get("ApplyToSubfolders", () => rule.AppliesToSubfolders);
             attributes.AssertNoUnused();
 
-            xml.MoveToContent();
-            rule.Filters.AddRange(ReadFilters(xml));            
+            var filters = ReadFilters(xml).ToArray();
+
+            if (filters.Count() > 1)
+                throw new Exception("You can only specify one filter at rule's root. Please use <MatchingAll>, <MatchingAny> or <MatchingNone>.");
+
+            rule.Filter = filters.First();
 
             return rule;
         }
@@ -132,8 +136,14 @@ namespace RecursiveCleaner.Engine.Config
                 case "wildcards":
                     filter = ReadWildcardsFilter(xml, attributes);
                     break;
-                case "exclude":
-                    filter = ReadExcludeFilter(xml, attributes);
+                case "matchingnone":
+                    filter = ReadMatchingNoneFilter(xml, attributes);
+                    break;
+                case "matchingall":
+                    filter = ReadMatchingAllFilter(xml, attributes);
+                    break;
+                case "matchingany":
+                    filter = ReadMatchingAnyFilter(xml, attributes);
                     break;
                 default:                    
                     xml.Skip();
@@ -186,11 +196,19 @@ namespace RecursiveCleaner.Engine.Config
             return new WildcardsFilter(pattern);
         }
 
-        private static IFilter ReadExcludeFilter(XmlReader xml, AttributeParser attributes)
+        private static IFilter ReadMatchingNoneFilter(XmlReader xml, AttributeParser attributes)
         {
-            xml.MoveToContent();
-            var innerFilters = ReadFilters(xml);
-            return new ExcludeFilter(innerFilters);
+            return new MatchingNoneFilter { Children = ReadFilters(xml) };
+        }
+
+        private static IFilter ReadMatchingAllFilter(XmlReader xml, AttributeParser attributes)
+        {
+            return new MatchingAllFilter { Children = ReadFilters(xml) };
+        }
+
+        private static IFilter ReadMatchingAnyFilter(XmlReader xml, AttributeParser attributes)
+        {
+            return new MatchingAnyFilter { Children = ReadFilters(xml) };
         }
 
         #endregion       

@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\CompoundFilters.cs" />
+    <Compile Include="Config\InvalidFiles.cs" />
+    <Compile Include="Config\SimpleConfigFiles.cs" />
+    <Compile Include="Filters\MatchingNoneFilterTests.cs" />
+    <Compile Include="Filters\MatchingAnyFilterTests.cs" />
+    <Compile Include="Filters\MatchingAllFilterTests.cs" />
     <Compile Include="Filters\OlderThanFilterTests.cs" />
     <Compile Include="Helpers\DummyFile.cs" />
     <Compile Include="Filters\WildcardsFilterTests.cs" />

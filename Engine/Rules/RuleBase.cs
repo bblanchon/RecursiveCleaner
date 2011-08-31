@@ -29,17 +29,16 @@ namespace RecursiveCleaner.Engine.Rules
 
         public bool AppliesToSubfolders { get; set; }
 
-        public List<IFilter> Filters { get; private set; }               
+        public IFilter Filter { get; set; }               
 
         public RuleBase()
         {
-            Filters = new List<IFilter>();
             AppliesToSubfolders = true;
         }
 
         public bool IsMatch(FileSystemInfo fsi)
         {
-            return Filters.All(x => x.IsMatch(fsi));
+            return Filter.IsMatch(fsi);
         }
 
         public abstract void Apply(FileSystemInfo fsi, bool simulation);
