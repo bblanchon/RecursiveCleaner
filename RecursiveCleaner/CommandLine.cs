@@ -38,6 +38,8 @@ namespace RecursiveCleaner
 
         public string[] Arguments { get; private set; }
 
+        public bool InteractiveMode { get; private set; }
+
         public CommandLine(params string[] args)
         {
             Arguments = args;
@@ -57,6 +59,9 @@ namespace RecursiveCleaner
                     case "-h":
                     case "-?":
                         ShowHelp = true;
+                        break;
+                    case "-i":
+                        InteractiveMode = true;
                         break;
                     case "-q":
                         LogLevel = LogLevel.Warning;
@@ -84,6 +89,7 @@ namespace RecursiveCleaner
                     "  -a  Scan all fixed drives\r\n" +
                     "  -e  Log to Event Log\r\n" +
                     "  -h  Show this help message\r\n" +
+                    "  -i  Interactive mode. User must press enter to close.\r\n" +
                     "  -q  Quiet mode (less log)\r\n" +
                     "  -s  Simulation mode (don't actually modify files)\r\n" +
                     "  -v  Verbose mode (more log)\r\n" +

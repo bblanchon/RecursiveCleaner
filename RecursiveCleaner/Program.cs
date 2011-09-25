@@ -27,21 +27,26 @@ namespace RecursiveCleaner
     {
         static void Main(string[] args)
         {
-#if DEBUG
-            MainCore(new CommandLine(args));
+            var cmdLine = new CommandLine(args);
 
-            Console.WriteLine("-- PRESS ENTER TO CLOSE --");
-            Console.ReadLine();
+#if DEBUG
+            MainCore(cmdLine);
 #else
             try
             {
-                MainCore(new CommandLine(args));
+                MainCore(cmdLine);
             }
             catch (Exception e)
             {
                 Console.WriteLine("ERROR: {0}", e.Message);
             }
 #endif
+
+            if (cmdLine.InteractiveMode)
+            {
+                Console.WriteLine("-- PRESS ENTER TO CLOSE --");
+                Console.ReadLine();
+            }
         }
 
         static void MainCore(CommandLine cmdLine)

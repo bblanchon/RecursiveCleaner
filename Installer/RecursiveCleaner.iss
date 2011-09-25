@@ -45,7 +45,7 @@ Source: "..\RecursiveCleaner\bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"
 Source: "..\RecursiveCleaner\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-a -i";
 
 [Tasks]
 Name: schtasks; Description: "Create a scheduled task";
