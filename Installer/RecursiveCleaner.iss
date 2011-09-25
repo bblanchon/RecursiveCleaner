@@ -15,7 +15,7 @@
 ; along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #define MyAppName "Recursive Cleaner"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.1.0"
 #define MyAppPublisher "Benoit Blanchon"
 #define MyAppURL "https://code.google.com/p/recursive-cleaner/"
 #define MyAppExeName "RecursiveCleaner.exe"
@@ -33,7 +33,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-OutputBaseFilename=SetupRecursiveCleaner
+OutputBaseFilename=SetupRecursiveCleaner_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 
@@ -42,6 +42,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "..\RecursiveCleaner\bin\Release\RecursiveCleaner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\RecursiveCleaner\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";
