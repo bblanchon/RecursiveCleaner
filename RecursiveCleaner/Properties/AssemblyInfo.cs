@@ -24,6 +24,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("RecursiveCleaner")]
 [assembly: AssemblyCopyright("Copyright © Benoit Blanchon 2011")]
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
 [assembly: ComVisibleAttribute(false)]

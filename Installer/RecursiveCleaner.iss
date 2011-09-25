@@ -15,7 +15,7 @@
 ; along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #define MyAppName "Recursive Cleaner"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.1.1"
 #define MyAppPublisher "Benoit Blanchon"
 #define MyAppURL "https://code.google.com/p/recursive-cleaner/"
 #define MyAppExeName "RecursiveCleaner.exe"
