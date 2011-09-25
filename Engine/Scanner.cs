@@ -97,6 +97,10 @@ namespace RecursiveCleaner.Engine
                     }
                 }
             }
+            catch (UnauthorizedAccessException e)
+            {
+                Log.Debug("Skip folder {0}: {1}", dir.FullName, e.Message);
+            }
             catch (Exception e)
             {
                 Log.Warning("Failed to scan folder {0}: {1}", dir.FullName, e.Message);
