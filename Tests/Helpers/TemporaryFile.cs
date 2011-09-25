@@ -18,7 +18,7 @@ namespace RecursiveCleaner.Tests.Helpers
         {
             set
             {
-                File.WriteAllText(Path, value);
+                File.WriteAllText(Path, value);                
             }
             get
             {
