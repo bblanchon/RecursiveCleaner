@@ -7,3 +7,6 @@
 /Engine/obj
 /Tests/obj
 /Tests/bin
+/Tests/TestResult.xml
+/Tests/Tests.csproj.VisualState.xml
+/Installer/Output/SetupRecursiveCleaner.exe
