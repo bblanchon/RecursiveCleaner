@@ -36,7 +36,7 @@ namespace RecursiveCleaner.Engine.Rules
                 shf.pFrom = Marshal.StringToHGlobalUni(path + '\0');
                 var ret = Shell32.SHFileOperation(ref shf);
 
-                if (ret == 0)
+                if (ret != 0)
                     Log.Warning("Recycle {0}... Error #{1}", path, ret);
                 else
                     Log.Info("Recycle {0}... OK", path);
