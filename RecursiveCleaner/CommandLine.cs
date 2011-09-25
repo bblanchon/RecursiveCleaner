@@ -34,20 +34,29 @@ namespace RecursiveCleaner
 
         public List<DirectoryInfo> Folders { private set; get; }
 
+        public bool ShowHelp { get; private set; }
+
+        public string[] Arguments { get; private set; }
+
         public CommandLine(params string[] args)
         {
+            Arguments = args;
             Folders = new List<DirectoryInfo>();
             LogLevel = LogLevel.Info;
 
             foreach (var arg in args)
             {
                 switch (arg)
-                {
+                {                    
                     case "-a":
                         ScanAllFixedDrives = true;
                         break;
                     case "-e":
                         LogToEventLog = true;
+                        break;
+                    case "-h":
+                    case "-?":
+                        ShowHelp = true;
                         break;
                     case "-q":
                         LogLevel = LogLevel.Warning;
@@ -62,6 +71,23 @@ namespace RecursiveCleaner
                         Folders.Add(new DirectoryInfo(arg));
                         break;
                 }
+            }
+        }
+
+        public static string Documentation
+        {
+            get
+            {
+                return 
+                    "Usage: RecursiveCleaner [options] [folder1] [folder2] ...\r\n" +
+                    "Available options:\r\n" +
+                    "  -a  Scan all fixed drives\r\n" +
+                    "  -e  Log to Event Log\r\n" +
+                    "  -h  Show this help message\r\n" +
+                    "  -q  Quiet mode (less log)\r\n" +
+                    "  -s  Simulation mode (don't actually modify files)\r\n" +
+                    "  -v  Verbose mode (more log)\r\n" +
+                    "If no folder is specified, the current directory would be scanned (unless -a is used).\r\n";
             }
         }
     }
