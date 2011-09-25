@@ -29,6 +29,10 @@ namespace RecursiveCleaner.Engine
     {
         public bool IsSimulating { get; set; }
 
+        public bool IncludeSystemFolders { get; set; }
+
+        public bool IncludeSystemFiles { get; set; }
+
         public void ScanFolder(DirectoryInfo folder)
         {
             var parentsRules = new List<IRule>();
@@ -72,6 +76,9 @@ namespace RecursiveCleaner.Engine
 
                 foreach (var subFolder in dir.EnumerateDirectories())
                 {
+                    if ((subFolder.Attributes & FileAttributes.System) != 0 && !IncludeSystemFolders)
+                        continue;
+
                     var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
 
                     if (matchingRule != null)
@@ -88,6 +95,9 @@ namespace RecursiveCleaner.Engine
                 {
                     foreach (var file in dir.EnumerateFiles())
                     {
+                        if ((file.Attributes & FileAttributes.System) != 0 && !IncludeSystemFiles)
+                            continue;
+
                         var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
 
                         if (matchingRule != null)
