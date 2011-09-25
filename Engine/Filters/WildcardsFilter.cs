@@ -33,7 +33,19 @@ namespace RecursiveCleaner.Engine.Filters
 
         static string BuildRegexPattern(string pattern)
         {
-            return "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
+            string s = "^" + Regex.Escape(pattern) + "$";
+
+            foreach (var kvp in map)
+                s = s.Replace(kvp.Key, kvp.Value);
+
+            return s;
         }
+
+        static Dictionary<string, string> map = new Dictionary<string, string>()
+        {
+            { @"\*", ".*" },
+            { @"\?", "." },
+            { @"\|", "$|^" },
+        };
     }
 }
