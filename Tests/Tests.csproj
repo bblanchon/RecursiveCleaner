@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\BiggerThanXmlTest.cs" />
+    <Compile Include="Filters\BiggerThanXmlTest.cs" />
     <Compile Include="Config\CompoundFilters.cs" />
     <Compile Include="Config\InvalidFiles.cs" />
     <Compile Include="Config\SimpleConfigFiles.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="Helpers\TemporaryFolder.cs" />
     <Compile Include="Helpers\XmlSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rules\MoveXmlTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

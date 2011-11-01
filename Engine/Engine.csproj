@@ -62,6 +62,7 @@
     <Compile Include="Rules\DeleteRule.cs" />
     <Compile Include="Rules\IgnoreRule.cs" />
     <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\MoveRule.cs" />
     <Compile Include="Rules\RecycleRule.cs" />
     <Compile Include="Rules\RuleBase.cs" />
     <Compile Include="Rules\RuleTarget.cs" />

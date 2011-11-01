@@ -65,7 +65,7 @@ namespace RecursiveCleaner.Engine.Config
 
         #region Rule reading
 
-        private static IRule ReadRule(XmlReader xml)
+        internal static IRule ReadRule(XmlReader xml, bool includeFilter=true)
         {
             IRule rule;
 
@@ -82,6 +82,9 @@ namespace RecursiveCleaner.Engine.Config
                 case "ignore":
                     rule = new IgnoreRule();
                     break;
+                case "move":
+                    rule = new MoveRule();
+                    break;
                 default:                    
                     xml.Skip();
                     throw new IgnoredElementException(elementName);
@@ -91,14 +94,27 @@ namespace RecursiveCleaner.Engine.Config
 
             attributes.Get("Target", () => rule.Target);
             attributes.Get("ApplyToSubfolders", () => rule.AppliesToSubfolders);
+
+            if (rule is MoveRule)
+            {
+                attributes.Get("ifexists", () => ((MoveRule)rule).IfExists);
+                attributes.Get("destination", () => ((MoveRule)rule).Destination, true);
+            }
+
             attributes.AssertNoUnused();
 
-            var filters = ReadFilters(xml).ToArray();
+            if (includeFilter)
+            {
+                var filters = ReadFilters(xml).ToArray();
 
-            if (filters.Count() > 1)
-                throw new Exception("You can only specify one filter at rule's root. Please use <MatchingAll>, <MatchingAny> or <MatchingNone>.");
+                if (filters.Count() == 0)
+                    throw new Exception("You must specificy a filter for this rule");
+                
+                if (filters.Count() > 1)
+                    throw new Exception("You can only specify one filter at rule's root. Please use <MatchingAll>, <MatchingAny> or <MatchingNone>.");
 
-            rule.Filter = filters.First();
+                rule.Filter = filters.First();
+            }
 
             return rule;
         }

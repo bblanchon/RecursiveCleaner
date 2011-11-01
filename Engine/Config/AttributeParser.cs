@@ -35,10 +35,11 @@ namespace RecursiveCleaner.Engine.Config
         }
 
         readonly Dictionary<string, AttributeInfo> dict;
+        readonly string elementName;
 
         public AttributeParser(XmlReader xml)
         {
-            var element = "<" + xml.Name + ">";
+            elementName = xml.Name;
             dict = new Dictionary<string, AttributeInfo>(xml.AttributeCount);
 
             if (xml.MoveToFirstAttribute())
@@ -93,7 +94,7 @@ namespace RecursiveCleaner.Engine.Config
 
             if (attr == null)
             {
-                if (isRequired) throw new Exception("Attribute " + attributeName + " is missing");
+                if (isRequired) throw new AttributeMissingException(elementName, attributeName);
                 else return;
             }                 
        

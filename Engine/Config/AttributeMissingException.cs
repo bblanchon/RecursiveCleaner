@@ -30,5 +30,11 @@ namespace RecursiveCleaner.Engine.Config
         {
 
         }
+
+        public AttributeMissingException(string elementName, string attributeName)
+            : base(string.Format("Attribute {1} missing in <{0}>", elementName, attributeName))
+        {
+
+        }
     }
 }

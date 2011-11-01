@@ -19,6 +19,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using RecursiveCleaner.Engine.Imports;
+using System;
 
 namespace RecursiveCleaner.Engine.Rules
 {
@@ -30,21 +31,31 @@ namespace RecursiveCleaner.Engine.Rules
 
             if (!simulation)
             {
-                var shf = new Shell32.SHFILEOPSTRUCT();
-                shf.wFunc = Shell32.FO_Func.FO_DELETE;
-                shf.fFlags = Shell32.FOF_ALLOWUNDO | Shell32.FOF_NO_UI;
-                shf.pFrom = Marshal.StringToHGlobalUni(path + '\0');
-                var ret = Shell32.SHFileOperation(ref shf);
-
-                if (ret != 0)
-                    Log.Warning("Recycle {0}... Error #{1}", path, ret);
-                else
+                try
+                {
+                    Recycle(path);
                     Log.Info("Recycle {0}... OK", path);
+                }
+                catch( Exception e )
+                {
+                    Log.Warning("Recycle {0}... {1}", path, e.Message);
+                }
             }
             else
             {
                 Log.Info("Recycle {0}", path);
             }
+        }
+
+        internal static void Recycle(string path)
+        {
+            var shf = new Shell32.SHFILEOPSTRUCT();
+            shf.wFunc = Shell32.FO_Func.FO_DELETE;
+            shf.fFlags = Shell32.FOF_ALLOWUNDO | Shell32.FOF_NO_UI;
+            shf.pFrom = Marshal.StringToHGlobalUni(path + '\0');
+
+            var ret = Shell32.SHFileOperation(ref shf);
+            if (ret != 0) throw new Exception("Error #" + ret);
         }
     }
 }

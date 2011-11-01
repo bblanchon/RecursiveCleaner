@@ -7,7 +7,7 @@ using RecursiveCleaner.Engine.Config;
 using RecursiveCleaner.Tests.Helpers;
 using RecursiveCleaner.Engine.Filters;
 
-namespace RecursiveCleaner.Tests.Config
+namespace RecursiveCleaner.Tests.Filters
 {
     [TestFixture]
     class BiggerThanXmlTest
