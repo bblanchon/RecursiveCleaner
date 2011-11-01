@@ -39,14 +39,16 @@ namespace RecursiveCleaner.Engine.Filters
         {
             if (fsi is DirectoryInfo)
             {
-                var newest = (fsi as DirectoryInfo).EnumerateFiles("*", SearchOption.AllDirectories).Max(x => x.LastWriteTime);
+                var folder = fsi as DirectoryInfo;
 
-                return newest + TimeSpan < DateTime.Now;
+                if (folder.EnumerateFileSystemInfos().Any())
+                {
+                    var newest = folder.EnumerateFiles("*", SearchOption.AllDirectories).Max(x => x.LastWriteTime);
+                    return newest + TimeSpan < DateTime.Now;
+                }
             }
-            else
-            {
-                return fsi.LastWriteTime + TimeSpan < DateTime.Now;
-            }
+
+            return fsi.LastWriteTime + TimeSpan < DateTime.Now;
         }
     }
 }
