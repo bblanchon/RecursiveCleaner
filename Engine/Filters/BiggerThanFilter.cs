@@ -22,31 +22,25 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace RecursiveCleaner.Tests.Helpers
+namespace RecursiveCleaner.Engine.Filters
 {
-    class DummyFile : FileSystemInfo
+    class BiggerThanFilter : IFilter
     {
-        bool exists = true;
-        readonly string name;
+        public long Size { get; set; }
 
-        public DummyFile(string name="tmpfile.tmp")
+        public bool IsMatch(FileSystemInfo fsi)
         {
-            this.name = name;
+            if( fsi is FileInfo )
+            {
+                return ((FileInfo)fsi).Length >= Size;
+            }
+
+            if (fsi is DirectoryInfo)
+            {
+                return ((DirectoryInfo)fsi).EnumerateFiles("*", SearchOption.AllDirectories).Sum(x => x.Length) >= Size;
+            }
+
+            return false;
         }
-
-        public override void Delete()
-        {
-            exists = false;
-        }
-
-        public override bool Exists
-        {
-            get { return exists; }
-        }
-
-        public override string Name
-        {
-            get { return name; }
-        }         
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using RecursiveCleaner.Engine.Filters;
-/*
+﻿/*
  * RecursiveCleaner - Deletes files or folders according to filters defined in XML files.
  * Copyright (C) 2011 Benoit Blanchon
  *
@@ -22,6 +16,12 @@ using RecursiveCleaner.Engine.Filters;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using RecursiveCleaner.Engine.Filters;
 using System.Reflection;
 using System.IO;
 using RecursiveCleaner.Tests.Helpers;

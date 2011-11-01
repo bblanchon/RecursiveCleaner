@@ -24,29 +24,31 @@ using System.IO;
 
 namespace RecursiveCleaner.Tests.Helpers
 {
-    class DummyFile : FileSystemInfo
+    class TemporaryFolder : IDisposable
     {
-        bool exists = true;
-        readonly string name;
-
-        public DummyFile(string name="tmpfile.tmp")
+        public TemporaryFolder(string name = "testfolder")
         {
-            this.name = name;
+            DirectoryInfo = new DirectoryInfo(name);
+            Console.WriteLine("Create folder {0}", DirectoryInfo.Name);
+            DirectoryInfo.Create();
         }
 
-        public override void Delete()
+        public TemporaryFile CreateFile()
         {
-            exists = false;
+            var num = 1 + DirectoryInfo.EnumerateFiles().Count();
+            return new TemporaryFile(string.Format("{0}\\testfile{1}.tmp", DirectoryInfo.Name, num));
         }
 
-        public override bool Exists
+        public DirectoryInfo DirectoryInfo
         {
-            get { return exists; }
+            private set;
+            get;
         }
 
-        public override string Name
+        public void Dispose()
         {
-            get { return name; }
-        }         
+            Console.WriteLine("Delete folder {0}", DirectoryInfo.Name);
+            DirectoryInfo.Delete(true);
+        }
     }
 }

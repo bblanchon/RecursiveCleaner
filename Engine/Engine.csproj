@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\AttributeMissingException.cs" />
     <Compile Include="Config\AttributeParser.cs" />
     <Compile Include="Config\ConfigFileReader.cs" />
     <Compile Include="Config\IgnoredElementException.cs" />
     <Compile Include="Config\UnknownAttributesException.cs" />
+    <Compile Include="Filters\BiggerThanFilter.cs" />
     <Compile Include="Filters\DelegateFilter.cs" />
     <Compile Include="Filters\MatchingAnyFilter.cs" />
     <Compile Include="Filters\MatchingAllFilter.cs" />

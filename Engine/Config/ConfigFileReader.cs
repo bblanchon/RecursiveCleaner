@@ -118,7 +118,7 @@ namespace RecursiveCleaner.Engine.Config
             }
         }
 
-        private static IFilter ReadFilter(XmlReader xml)
+        internal static IFilter ReadFilter(XmlReader xml)
         {
             var elementName = xml.Name;
             var attributes = new AttributeParser(xml);
@@ -127,6 +127,9 @@ namespace RecursiveCleaner.Engine.Config
 
             switch (elementName.ToLower())
             {
+                case "biggerthan":
+                    filter = ReadBiggerThanFilter(xml, attributes);
+                    break;
                 case "regex":
                     filter = ReadRegexFilter(xml, attributes);
                     break;
@@ -153,6 +156,20 @@ namespace RecursiveCleaner.Engine.Config
             attributes.AssertNoUnused();
 
             return filter;
+        }
+
+        private static IFilter ReadBiggerThanFilter(XmlReader xml, AttributeParser attributes)
+        {
+            if (attributes.Count == 0)
+                throw new AttributeMissingException("BiggerThan");
+
+            long b=0, kb=0, mb=0, tb=0;
+            attributes.Get("bytes", () => b);
+            attributes.Get("kb", () => kb);
+            attributes.Get("mb", () => mb);
+            attributes.Get("tb", () => tb);
+
+            return new BiggerThanFilter { Size = b + (kb << 10) + (mb << 20) + (tb << 30) };
         }
 
         private static IFilter ReadOlderThanFilter(XmlReader xml, AttributeParser attributes)

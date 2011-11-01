@@ -20,33 +20,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 
-namespace RecursiveCleaner.Tests.Helpers
+namespace RecursiveCleaner.Engine.Config
 {
-    class DummyFile : FileSystemInfo
+    class AttributeMissingException : Exception
     {
-        bool exists = true;
-        readonly string name;
-
-        public DummyFile(string name="tmpfile.tmp")
+        public AttributeMissingException(string elementName)
+            : base(string.Format("Attribute missing in <{0}>", elementName))
         {
-            this.name = name;
+
         }
-
-        public override void Delete()
-        {
-            exists = false;
-        }
-
-        public override bool Exists
-        {
-            get { return exists; }
-        }
-
-        public override string Name
-        {
-            get { return name; }
-        }         
     }
 }

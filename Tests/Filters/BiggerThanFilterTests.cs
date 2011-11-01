@@ -20,40 +20,71 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
 using RecursiveCleaner.Engine.Filters;
+using NUnit.Framework;
 using RecursiveCleaner.Tests.Helpers;
 
 namespace RecursiveCleaner.Tests.Filters
 {
     [TestFixture]
-    class OlderThanFilterTests
+    public class BiggerThanFilterTests
     {
         IFilter filter;
 
         [SetUp]
         public void SetUp()
         {
-            filter = new OlderThanFilter(0, 0, 1, 0, 0, 0);
+            filter = new BiggerThanFilter
+            {
+                Size = 10
+            };
         }
 
         [Test]
-        public void TestMatch ()
+        public void MatchingFile()
         {
             using (var file = new TemporaryFile())
             {
-                file.FileInfo.LastWriteTime = DateTime.Now.Subtract(TimeSpan.FromDays(2));
+                file.Contents = "0123456789";
                 Assert.IsTrue(filter.IsMatch(file.FileInfo));
             }
         }
 
         [Test]
-        public void TestNonMatch()
+        public void NonMatchingFile()
         {
             using (var file = new TemporaryFile())
             {
-                file.FileInfo.LastWriteTime = DateTime.Now;
+                file.Contents = "01234";
                 Assert.IsFalse(filter.IsMatch(file.FileInfo));
+            }
+        }
+
+        [Test]
+        public void MatchingFolder()
+        {
+            using (var folder = new TemporaryFolder())
+            {
+                using (TemporaryFile file1 = folder.CreateFile(), file2 = folder.CreateFile())
+                {
+                    file1.Contents = "01234";
+                    file2.Contents = "56789";
+                    Assert.IsTrue(filter.IsMatch(folder.DirectoryInfo));
+                }
+            }
+        }
+
+        [Test]
+        public void NonMatchingFolder()
+        {
+            using (var folder = new TemporaryFolder())
+            {
+                using (TemporaryFile file1 = folder.CreateFile(), file2 = folder.CreateFile())
+                {
+                    file1.Contents = "0123";
+                    file2.Contents = "5678";
+                    Assert.IsFalse(filter.IsMatch(folder.DirectoryInfo));
+                }
             }
         }
     }

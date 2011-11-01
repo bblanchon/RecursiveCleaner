@@ -47,9 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\BiggerThanXmlTest.cs" />
     <Compile Include="Config\CompoundFilters.cs" />
     <Compile Include="Config\InvalidFiles.cs" />
     <Compile Include="Config\SimpleConfigFiles.cs" />
+    <Compile Include="Filters\BiggerThanFilterTests.cs" />
     <Compile Include="Filters\MatchingNoneFilterTests.cs" />
     <Compile Include="Filters\MatchingAnyFilterTests.cs" />
     <Compile Include="Filters\MatchingAllFilterTests.cs" />
@@ -58,6 +60,8 @@
     <Compile Include="Filters\WildcardsFilterTests.cs" />
     <Compile Include="Filters\RegexFilterTests.cs" />
     <Compile Include="Helpers\TemporaryFile.cs" />
+    <Compile Include="Helpers\TemporaryFolder.cs" />
+    <Compile Include="Helpers\XmlSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
