@@ -65,7 +65,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            RecycleRule.Recycle(destination);
+                            if (!simulation) RecycleRule.Recycle(destination);
                             Log.Info("Move {0}... existing destination file recycled", fsi.FullName);
                         }
                         catch (Exception e)
@@ -79,7 +79,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            File.Delete(destination);
+                            if (!simulation) File.Delete(destination);
                             Log.Info("Move {0}... existing destination file deleted", fsi.FullName);
                         }
                         catch (Exception e)
@@ -109,20 +109,18 @@ namespace RecursiveCleaner.Engine.Rules
                     }
                 }
 
-                if (!simulation)
+                try
                 {
-                    try
-                    {
-                        file.MoveTo(destination);
-                        Log.Info("Move {0} to {1}... OK", fsi.FullName, destination);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Info("Move {0} to {1}... {2}", fsi.FullName, destination, e.Message);
-                    }
+                    if (!simulation) file.MoveTo(destination);
+                    Log.Info("Move {0} to {1}... OK", fsi.FullName, destination);
                 }
+                catch (Exception e)
+                {
+                    Log.Info("Move {0} to {1}... {2}", fsi.FullName, destination, e.Message);
+                }                
             }
-            else
+            
+            if( fsi is DirectoryInfo )
             {
                 var folder = fsi as DirectoryInfo;
 
@@ -138,7 +136,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            RecycleRule.Recycle(destination);
+                            if (!simulation) RecycleRule.Recycle(destination);
                             Log.Info("Move {0}... existing destination file recycled", fsi.FullName);
                         }
                         catch (Exception e)
@@ -152,7 +150,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            Directory.Delete(destination, true);
+                            if (!simulation) Directory.Delete(destination, true);
                             Log.Info("Move {0}... existing destination file deleted", fsi.FullName);
                         }
                         catch (Exception e)
@@ -180,6 +178,16 @@ namespace RecursiveCleaner.Engine.Rules
                             if (!Directory.Exists(destination)) break;
                         }
                     }
+
+                    try
+                    {
+                        if (!simulation) folder.MoveTo(destination);
+                        Log.Info("Move {0} to {1}... OK", fsi.FullName, destination);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Info("Move {0} to {1}... {2}", fsi.FullName, destination, e.Message);
+                    } 
                 }
             }            
         }

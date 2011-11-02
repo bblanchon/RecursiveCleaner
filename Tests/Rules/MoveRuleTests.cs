@@ -27,7 +27,7 @@ namespace RecursiveCleaner.Tests.Rules
 
                 Assert.IsFalse(folder1.Files.Any(x => x.Name == file.Name));
                 Assert.IsTrue(folder2.Files.Any(x=>x.Name==file.Name));
-            }                           
+            }
         }
 
         [Test]
