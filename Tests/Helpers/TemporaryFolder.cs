@@ -26,17 +26,30 @@ namespace RecursiveCleaner.Tests.Helpers
 {
     class TemporaryFolder : IDisposable
     {
-        public TemporaryFolder(string name = "testfolder")
+        private static int count = 0;
+
+        public TemporaryFolder()
+            : this("tmp"+count++)
+        {
+
+        }
+
+        public TemporaryFolder(string name)
         {
             DirectoryInfo = new DirectoryInfo(name);
             Console.WriteLine("Create folder {0}", DirectoryInfo.Name);
             DirectoryInfo.Create();
         }
 
+        public TemporaryFile CreateFile(string name)
+        {
+            return new TemporaryFile(System.IO.Path.Combine(DirectoryInfo.Name,name));
+        }
+
         public TemporaryFile CreateFile()
         {
             var num = 1 + DirectoryInfo.EnumerateFiles().Count();
-            return new TemporaryFile(string.Format("{0}\\testfile{1}.tmp", DirectoryInfo.Name, num));
+            return CreateFile("tmp" + num);
         }
 
         public DirectoryInfo DirectoryInfo
@@ -45,10 +58,23 @@ namespace RecursiveCleaner.Tests.Helpers
             get;
         }
 
+        public IEnumerable<FileInfo> Files
+        {
+            get { return DirectoryInfo.EnumerateFiles(); }
+        }
+
         public void Dispose()
         {
             Console.WriteLine("Delete folder {0}", DirectoryInfo.Name);
             DirectoryInfo.Delete(true);
+        }
+
+        public string Path 
+        { 
+            get 
+            {
+                return DirectoryInfo.FullName;
+            } 
         }
     }
 }

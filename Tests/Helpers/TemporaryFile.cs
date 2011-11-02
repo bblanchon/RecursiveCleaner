@@ -50,6 +50,11 @@ namespace RecursiveCleaner.Tests.Helpers
             get { return FileInfo.FullName; }
         }
 
+        public string Name
+        {
+            get { return FileInfo.Name; }
+        }
+
         public FileInfo FileInfo
         {
             get;
