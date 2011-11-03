@@ -49,7 +49,7 @@ namespace RecursiveCleaner.Engine
         {
             var configPath = Path.Combine(folder.FullName, ConfigFileReader.Filename);
 
-            if (!File.Exists(configPath))return Enumerable.Empty<IRule>();
+            if (!File.Exists(configPath)) return Enumerable.Empty<IRule>();
             
             Log.Info("Found {0}", configPath);
             try
@@ -69,39 +69,59 @@ namespace RecursiveCleaner.Engine
 
             try
             {
+                //
+                // 1. Read local config file
+                //
                 rules = ReadFolderLocalRules(dir).Concat(rules).ToArray();
 
                 var folderRules = rules.Where(x => x.Target == RuleTarget.Folders || x.Target == RuleTarget.FilesAndFolders);
                 var fileRules = rules.Where(x => x.Target == RuleTarget.Files || x.Target == RuleTarget.FilesAndFolders);
 
-                foreach (var subFolder in dir.EnumerateDirectories())
+                //
+                // 2. Scan folders
+                //
+                foreach (var subFolder in dir.EnumerateDirectories())                
                 {
+                    // skip system folders
                     if ((subFolder.Attributes & FileAttributes.System) != 0 && !IncludeSystemFolders)
                         continue;
 
+                    // find first matching rule
                     var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
-
+                                        
                     if (matchingRule != null)
                     {
+                        // apply rule to the folder
                         matchingRule.Apply(subFolder, IsSimulating);
                     }
                     else
                     {
+                        // scan folder recursively, using appropriate rules
                         ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders));
                     }
                 }
 
+                //
+                // 3. Scan files
+                //
                 if (fileRules.Any())
                 {
                     foreach (var file in dir.EnumerateFiles())
                     {
+                        // skip system files
                         if ((file.Attributes & FileAttributes.System) != 0 && !IncludeSystemFiles)
                             continue;
 
-                        var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
+                        // skip file RecursiveCleaner.config
+                        if (file.Name.Equals(ConfigFileReader.Filename, StringComparison.InvariantCultureIgnoreCase))
+                            continue;
 
+                        // get first matching rule
+                        var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
+                                                
                         if (matchingRule != null)
                         {
+                            // apply the rule to the file
                             matchingRule.Apply(file, IsSimulating);
                         }
                     }
