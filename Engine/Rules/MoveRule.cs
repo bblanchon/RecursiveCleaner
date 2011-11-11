@@ -38,6 +38,11 @@ namespace RecursiveCleaner.Engine.Rules
         public string Destination { get; set; }
         public bool CreateFolder { get; set; }
 
+        public MoveRule()
+        {
+            CreateFolder = true;
+        }
+
         public override void Apply(FileSystemInfo fsi, Environment environment)
         {
             Destination = environment.ExpandVariables(Destination);
