@@ -11,6 +11,11 @@ namespace RecursiveCleaner.Tests.Rules
     [TestFixture]
     class MoveRuleTests
     {
+        static Engine.Environment environment = new Engine.Environment()
+        {
+            IsSimulating = false
+        };
+
         [Test]
         public void FileNoCollision()
         {
@@ -23,7 +28,7 @@ namespace RecursiveCleaner.Tests.Rules
                     Destination = folder2.Path
                 };
 
-                rule.Apply(file.FileInfo, false);
+                rule.Apply(file.FileInfo, environment);
 
                 Assert.IsFalse(folder1.Files.Any(x => x.Name == file.Name));
                 Assert.IsTrue(folder2.Files.Any(x=>x.Name==file.Name));
@@ -44,7 +49,7 @@ namespace RecursiveCleaner.Tests.Rules
                     IfExists = MoveRule.IfExistsMode.Cancel
                 };
 
-                rule.Apply(file1.FileInfo, false);
+                rule.Apply(file1.FileInfo, environment);
 
                 Assert.IsTrue(folder1.Files.Any(x => x.Name == file1.Name));
                 Assert.AreEqual(1, folder2.Files.Count());
@@ -65,7 +70,7 @@ namespace RecursiveCleaner.Tests.Rules
                     IfExists = MoveRule.IfExistsMode.Delete
                 };
 
-                rule.Apply(file1.FileInfo, false);
+                rule.Apply(file1.FileInfo, environment);
 
                 Assert.IsFalse(folder1.Files.Any(x => x.Name == file1.Name));
                 Assert.IsTrue(folder2.Files.Any(x => x.Name == file1.Name));
@@ -87,7 +92,7 @@ namespace RecursiveCleaner.Tests.Rules
                     IfExists = MoveRule.IfExistsMode.Recycle
                 };
 
-                rule.Apply(file1.FileInfo, false);
+                rule.Apply(file1.FileInfo, environment);
 
                 Assert.IsFalse(folder1.Files.Any(x => x.Name == file1.Name));
                 Assert.IsTrue(folder2.Files.Any(x => x.Name == file1.Name));
@@ -109,7 +114,7 @@ namespace RecursiveCleaner.Tests.Rules
                     IfExists = MoveRule.IfExistsMode.Rename
                 };
 
-                rule.Apply(file1.FileInfo, false);
+                rule.Apply(file1.FileInfo, environment);
 
                 Assert.IsFalse(folder1.Files.Any(x => x.Name == file1.Name));
                 Assert.IsTrue(folder2.Files.Any(x => x.Name == file1.Name));

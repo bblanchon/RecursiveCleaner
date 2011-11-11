@@ -25,11 +25,11 @@ namespace RecursiveCleaner.Engine.Rules
 {
     class RecycleRule : RuleBase
     {
-        public override void Apply(FileSystemInfo fsi, bool simulation)
+        public override void Apply(FileSystemInfo fsi, Environment environment)
         {
             var path = fsi.FullName;
 
-            if (!simulation)
+            if (!environment.IsSimulating)
             {
                 try
                 {

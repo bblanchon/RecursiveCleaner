@@ -22,7 +22,7 @@ namespace RecursiveCleaner.Engine.Rules
 {
     class IgnoreRule : RuleBase
     {
-        public override void Apply(FileSystemInfo fsi, bool simulation)
+        public override void Apply(FileSystemInfo fsi, Environment environment)
         {
             Log.Info("Ignore {0}", fsi.FullName);
         }

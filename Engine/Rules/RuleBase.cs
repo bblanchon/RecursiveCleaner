@@ -41,6 +41,6 @@ namespace RecursiveCleaner.Engine.Rules
             return Filter.IsMatch(fsi);
         }
 
-        public abstract void Apply(FileSystemInfo fsi, bool simulation);
+        public abstract void Apply(FileSystemInfo fsi, Environment environment);
     }
 }

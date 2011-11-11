@@ -32,6 +32,6 @@ namespace RecursiveCleaner.Engine.Rules
 
         bool IsMatch(FileSystemInfo fsi);
 
-        void Apply(FileSystemInfo fsi, bool simulation);
+        void Apply(FileSystemInfo fsi, Environment environment);
     }
 }

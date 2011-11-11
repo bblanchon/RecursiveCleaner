@@ -99,6 +99,7 @@ namespace RecursiveCleaner.Engine.Config
             {
                 attributes.Get("ifexists", () => ((MoveRule)rule).IfExists);
                 attributes.Get("destination", () => ((MoveRule)rule).Destination, true);
+                attributes.Get("createfolder", () => ((MoveRule)rule).CreateFolder);
             }
 
             attributes.AssertNoUnused();
@@ -193,16 +194,17 @@ namespace RecursiveCleaner.Engine.Config
             if (attributes.Count == 0)
                 throw new Exception("Attribute missing in <OlderThan>");
 
-            int years=0, months=0, days=0, hours=0, minutes=0, seconds=0;
+            int years=0, months=0, days=0, hours=0, minutes=0, seconds=0, weeks=0;
 
             attributes.Get("years", () => years);
             attributes.Get("months", () => months);
+            attributes.Get("weeks", () => weeks);
             attributes.Get("days", () => days);
             attributes.Get("hours", () => hours);
             attributes.Get("minutes", () => minutes);
             attributes.Get("seconds", () => seconds);            
 
-            return new OlderThanFilter(years, months, days, hours, minutes, seconds);
+            return new OlderThanFilter(years, months, days+7*weeks, hours, minutes, seconds);
         }
 
         private static IFilter ReadRegexFilter(XmlReader xml, AttributeParser attributes)

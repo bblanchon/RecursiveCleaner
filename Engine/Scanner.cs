@@ -35,6 +35,19 @@ namespace RecursiveCleaner.Engine
 
         public void ScanFolder(DirectoryInfo folder)
         {
+            var environment = new Environment
+            {
+                { "date",   DateTime.Now.ToLongDateString() },
+                { "time",   DateTime.Now.ToLongTimeString() },
+                { "year",   DateTime.Now.Year },
+                { "month",  DateTime.Now.Month },
+                { "day",    DateTime.Now.Day },
+                { "hour",   DateTime.Now.Hour },
+                { "minute", DateTime.Now.Minute }
+            };
+
+            environment.IsSimulating = IsSimulating;
+
             var parentsRules = new List<IRule>();
 
             for (var parent = folder.Parent; parent != null; parent = parent.Parent)
@@ -42,7 +55,7 @@ namespace RecursiveCleaner.Engine
                 parentsRules.AddRange(ReadFolderLocalRules(parent));
             }
 
-            ScanFolder(folder, parentsRules);
+            ScanFolder(folder, parentsRules, environment);
         }
 
         IEnumerable<IRule> ReadFolderLocalRules(DirectoryInfo folder)
@@ -63,7 +76,7 @@ namespace RecursiveCleaner.Engine
             }            
         }
 
-        void ScanFolder(DirectoryInfo dir, IEnumerable<IRule> rules)
+        void ScanFolder(DirectoryInfo dir, IEnumerable<IRule> parentRules, Environment parentEnvironment)
         {
             Log.Debug("Scanning folder {0}", dir.FullName);
 
@@ -72,7 +85,7 @@ namespace RecursiveCleaner.Engine
                 //
                 // 1. Read local config file
                 //
-                rules = ReadFolderLocalRules(dir).Concat(rules).ToArray();
+                var rules = ReadFolderLocalRules(dir).Concat(parentRules).ToArray();
 
                 var folderRules = rules.Where(x => x.Target == RuleTarget.Folders || x.Target == RuleTarget.FilesAndFolders);
                 var fileRules = rules.Where(x => x.Target == RuleTarget.Files || x.Target == RuleTarget.FilesAndFolders);
@@ -82,6 +95,11 @@ namespace RecursiveCleaner.Engine
                 //
                 foreach (var subFolder in dir.EnumerateDirectories())                
                 {
+                    var environment = new Environment(parentEnvironment)
+                    {
+                        { "source", subFolder.Name },
+                    };
+
                     // skip system folders
                     if ((subFolder.Attributes & FileAttributes.System) != 0 && !IncludeSystemFolders)
                         continue;
@@ -92,12 +110,12 @@ namespace RecursiveCleaner.Engine
                     if (matchingRule != null)
                     {
                         // apply rule to the folder
-                        matchingRule.Apply(subFolder, IsSimulating);
+                        matchingRule.Apply(subFolder, environment);
                     }
                     else
                     {
                         // scan folder recursively, using appropriate rules
-                        ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders));
+                        ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders), environment);
                     }
                 }
 
@@ -108,6 +126,11 @@ namespace RecursiveCleaner.Engine
                 {
                     foreach (var file in dir.EnumerateFiles())
                     {
+                        var environment = new Environment(parentEnvironment)
+                        {
+                            { "source", file.Name },
+                        };
+
                         // skip system files
                         if ((file.Attributes & FileAttributes.System) != 0 && !IncludeSystemFiles)
                             continue;
@@ -122,7 +145,7 @@ namespace RecursiveCleaner.Engine
                         if (matchingRule != null)
                         {
                             // apply the rule to the file
-                            matchingRule.Apply(file, IsSimulating);
+                            matchingRule.Apply(file, environment);
                         }
                     }
                 }

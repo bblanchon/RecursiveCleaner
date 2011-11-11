@@ -36,15 +36,26 @@ namespace RecursiveCleaner.Engine.Rules
 
         public IfExistsMode IfExists { get; set; }
         public string Destination { get; set; }
+        public bool CreateFolder { get; set; }
 
-        public override void Apply(FileSystemInfo fsi, bool simulation)
+        public override void Apply(FileSystemInfo fsi, Environment environment)
         {
+            Destination = environment.ExpandVariables(Destination);
             Destination = Path.GetFullPath(Destination);
+
             if( !Directory.Exists(Destination) ) 
             {
-                Log.Warning("Move {0}... Destination folder ({1}) doesn't exists",
-                    fsi.FullName, Destination);
-                return;
+                if (CreateFolder)
+                {
+                    Log.Info("Create folder {0}", Destination);
+                    if (!environment.IsSimulating) Directory.CreateDirectory(Destination);
+                }
+                else
+                {
+                    Log.Warning("Move {0}... Destination folder ({1}) doesn't exists",
+                        fsi.FullName, Destination);
+                    return;
+                }
             }
 
             var destination = Path.Combine(Destination, fsi.Name);
@@ -65,7 +76,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            if (!simulation) RecycleRule.Recycle(destination);
+                            if (!environment.IsSimulating) RecycleRule.Recycle(destination);
                             Log.Info("Move {0}... existing destination file recycled", fsi.FullName);
                         }
                         catch (Exception e)
@@ -79,7 +90,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            if (!simulation) File.Delete(destination);
+                            if (!environment.IsSimulating) File.Delete(destination);
                             Log.Info("Move {0}... existing destination file deleted", fsi.FullName);
                         }
                         catch (Exception e)
@@ -111,7 +122,7 @@ namespace RecursiveCleaner.Engine.Rules
 
                 try
                 {
-                    if (!simulation) file.MoveTo(destination);
+                    if (!environment.IsSimulating) file.MoveTo(destination);
                     Log.Info("Move {0} to {1}... OK", fsi.FullName, destination);
                 }
                 catch (Exception e)
@@ -136,7 +147,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            if (!simulation) RecycleRule.Recycle(destination);
+                            if (!environment.IsSimulating) RecycleRule.Recycle(destination);
                             Log.Info("Move {0}... existing destination file recycled", fsi.FullName);
                         }
                         catch (Exception e)
@@ -150,7 +161,7 @@ namespace RecursiveCleaner.Engine.Rules
                     {
                         try
                         {
-                            if (!simulation) Directory.Delete(destination, true);
+                            if (!environment.IsSimulating) Directory.Delete(destination, true);
                             Log.Info("Move {0}... existing destination file deleted", fsi.FullName);
                         }
                         catch (Exception e)
@@ -181,7 +192,7 @@ namespace RecursiveCleaner.Engine.Rules
 
                     try
                     {
-                        if (!simulation) folder.MoveTo(destination);
+                        if (!environment.IsSimulating) folder.MoveTo(destination);
                         Log.Info("Move {0} to {1}... OK", fsi.FullName, destination);
                     }
                     catch (Exception e)
