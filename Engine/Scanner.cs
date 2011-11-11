@@ -97,7 +97,7 @@ namespace RecursiveCleaner.Engine
                 {
                     var environment = new Environment(parentEnvironment)
                     {
-                        { "source", subFolder.Name },
+                        { "source.name", subFolder.Name },                       
                     };
 
                     // skip system folders
@@ -128,7 +128,17 @@ namespace RecursiveCleaner.Engine
                     {
                         var environment = new Environment(parentEnvironment)
                         {
-                            { "source", file.Name },
+                            { "source.name", file.Name },
+                            { "source.date", file.LastWriteTime.Date.ToLongDateString() },
+                            { "source.time", file.LastWriteTime.Date.ToLongTimeString() },
+
+                            { "source.year", file.LastWriteTime.Date.Year },
+                            { "source.month", file.LastWriteTime.Date.Month },
+                            { "source.day", file.LastWriteTime.Date.Day },
+
+                            { "source.hour", file.LastWriteTime.Date.Hour },
+                            { "source.minute", file.LastWriteTime.Date.Minute },
+                            { "source.second", file.LastWriteTime.Date.Second },
                         };
 
                         // skip system files

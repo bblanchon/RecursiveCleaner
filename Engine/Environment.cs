@@ -27,7 +27,7 @@ namespace RecursiveCleaner.Engine
 {
     class Environment : IEnumerable
     {
-        private static readonly Regex syntaxRegex = new Regex(@"%(\w+?)%");
+        private static readonly Regex syntaxRegex = new Regex(@"%([\w\.]+?)%");
         private readonly Environment parent;
         private readonly Dictionary<string,object> variables;
 
