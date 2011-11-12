@@ -20,6 +20,8 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Environments;
+
     class IgnoreRule : RuleBase
     {
         public override void Apply(FileSystemInfo fsi, Environment environment)

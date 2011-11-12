@@ -19,10 +19,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RecursiveCleaner.Engine.Filters;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Environments;
+    using Filters;
+
     abstract class RuleBase : IRule
     {
         public RuleTarget Target { get; set; }

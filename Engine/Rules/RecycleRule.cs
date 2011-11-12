@@ -23,6 +23,8 @@ using System;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Environments;
+
     class RecycleRule : RuleBase
     {
         public override void Apply(FileSystemInfo fsi, Environment environment)

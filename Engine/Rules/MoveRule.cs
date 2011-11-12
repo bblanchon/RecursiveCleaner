@@ -24,6 +24,8 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Environments;
+
     class MoveRule : RuleBase
     {
         public enum IfExistsMode

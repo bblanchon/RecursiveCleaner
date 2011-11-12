@@ -24,7 +24,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.IO;
 
-namespace RecursiveCleaner.Engine
+namespace RecursiveCleaner.Engine.Environments
 {
     class Environment : IEnumerable
     {

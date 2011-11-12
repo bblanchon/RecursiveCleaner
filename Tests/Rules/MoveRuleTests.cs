@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using RecursiveCleaner.Engine.Rules;
-using RecursiveCleaner.Tests.Helpers;
 
 namespace RecursiveCleaner.Tests.Rules
-{
+{    
+    using Helpers;
+    using Engine.Rules;
+    using Engine.Environments;
+
     [TestFixture]
     class MoveRuleTests
     {
-        static Engine.Environment environment = new Engine.Environment()
+        static Environment environment = new Environment()
         {
             IsSimulating = false
         };

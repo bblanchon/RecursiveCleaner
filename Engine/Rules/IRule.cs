@@ -18,10 +18,12 @@
 
 using System.Collections.Generic;
 using System.IO;
-using RecursiveCleaner.Engine.Filters;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Filters;
+    using Environments;
+
     interface IRule
     {
         RuleTarget Target { get; set; }

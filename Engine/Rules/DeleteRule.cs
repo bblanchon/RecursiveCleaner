@@ -21,6 +21,8 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Rules
 {
+    using Environments;
+
     class DeleteRule : RuleBase
     {
         public override void Apply(FileSystemInfo fsi, Environment environment)

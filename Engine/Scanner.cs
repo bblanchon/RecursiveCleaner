@@ -20,11 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RecursiveCleaner.Engine.Config;
-using RecursiveCleaner.Engine.Rules;
 
 namespace RecursiveCleaner.Engine
 {
+    using Config;
+    using Rules;
+    using Environments;    
+    
     public class Scanner
     {
         public bool IsSimulating { get; set; }
@@ -100,10 +102,7 @@ namespace RecursiveCleaner.Engine
                 //
                 foreach (var subFolder in dir.EnumerateDirectories())                
                 {
-                    var folderEnvironment = new Environment(environment)
-                    {
-                        { "source.name", subFolder.Name },                        
-                    };
+                    var folderEnvironment = new FileEnvironment(subFolder, environment);
 
                     // skip system folders
                     if ((subFolder.Attributes & FileAttributes.System) != 0 && !IncludeSystemFolders)
@@ -131,20 +130,7 @@ namespace RecursiveCleaner.Engine
                 {
                     foreach (var file in dir.EnumerateFiles())
                     {
-                        var fileEnvironment = new Environment(environment)
-                        {
-                            { "source.name", file.Name },
-                            { "source.date", file.LastWriteTime.Date.ToLongDateString() },
-                            { "source.time", file.LastWriteTime.Date.ToLongTimeString() },
-
-                            { "source.year", file.LastWriteTime.Date.Year },
-                            { "source.month", file.LastWriteTime.Date.Month },
-                            { "source.day", file.LastWriteTime.Date.Day },
-
-                            { "source.hour", file.LastWriteTime.Date.Hour },
-                            { "source.minute", file.LastWriteTime.Date.Minute },
-                            { "source.second", file.LastWriteTime.Date.Second },
-                        };
+                        var fileEnvironment = new FileEnvironment(file, environment);
 
                         // skip system files
                         if ((file.Attributes & FileAttributes.System) != 0 && !IncludeSystemFiles)
