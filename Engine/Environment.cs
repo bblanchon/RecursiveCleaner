@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections;
+using System.IO;
 
 namespace RecursiveCleaner.Engine
 {
@@ -37,7 +38,10 @@ namespace RecursiveCleaner.Engine
             this.variables = new Dictionary<string, object>();
 
             if (parent != null)
+            {
                 IsSimulating = parent.IsSimulating;
+                CurrentDirectory = parent.CurrentDirectory;
+            }
         }
 
         public bool IsSimulating { get; set; }
@@ -90,6 +94,16 @@ namespace RecursiveCleaner.Engine
         {
             // not used, just here to use the C# 3.0 collection initializer
             throw new NotImplementedException();
+        }
+
+        public DirectoryInfo CurrentDirectory { get; set; }
+
+        public string GetFullPath(string path)
+        {
+            return 
+                Path.IsPathRooted(path) ? path : 
+                CurrentDirectory!=null ? Path.Combine(CurrentDirectory.FullName, path) :
+                Path.GetFullPath(path);
         }
     }
 }

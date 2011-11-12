@@ -46,7 +46,7 @@ namespace RecursiveCleaner.Engine.Rules
         public override void Apply(FileSystemInfo fsi, Environment environment)
         {
             Destination = environment.ExpandVariables(Destination);
-            Destination = Path.GetFullPath(Destination);
+            Destination = environment.GetFullPath(Destination);
 
             if( !Directory.Exists(Destination) ) 
             {

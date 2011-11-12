@@ -80,6 +80,11 @@ namespace RecursiveCleaner.Engine
         {
             Log.Debug("Scanning folder {0}", dir.FullName);
 
+            var environment = new Environment(parentEnvironment)
+            {
+                CurrentDirectory = dir                       
+            };
+
             try
             {
                 //
@@ -95,9 +100,9 @@ namespace RecursiveCleaner.Engine
                 //
                 foreach (var subFolder in dir.EnumerateDirectories())                
                 {
-                    var environment = new Environment(parentEnvironment)
+                    var folderEnvironment = new Environment(environment)
                     {
-                        { "source.name", subFolder.Name },                       
+                        { "source.name", subFolder.Name },                        
                     };
 
                     // skip system folders
@@ -110,12 +115,12 @@ namespace RecursiveCleaner.Engine
                     if (matchingRule != null)
                     {
                         // apply rule to the folder
-                        matchingRule.Apply(subFolder, environment);
+                        matchingRule.Apply(subFolder, folderEnvironment);
                     }
                     else
                     {
                         // scan folder recursively, using appropriate rules
-                        ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders), environment);
+                        ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders), folderEnvironment);
                     }
                 }
 
@@ -126,7 +131,7 @@ namespace RecursiveCleaner.Engine
                 {
                     foreach (var file in dir.EnumerateFiles())
                     {
-                        var environment = new Environment(parentEnvironment)
+                        var fileEnvironment = new Environment(environment)
                         {
                             { "source.name", file.Name },
                             { "source.date", file.LastWriteTime.Date.ToLongDateString() },
@@ -155,7 +160,7 @@ namespace RecursiveCleaner.Engine
                         if (matchingRule != null)
                         {
                             // apply the rule to the file
-                            matchingRule.Apply(file, environment);
+                            matchingRule.Apply(file, fileEnvironment);
                         }
                     }
                 }
