@@ -47,25 +47,24 @@ namespace RecursiveCleaner.Engine.Rules
 
         public override void Apply(FileSystemInfo fsi, Environment environment)
         {
-            Destination = environment.ExpandVariables(Destination);
-            Destination = environment.GetFullPath(Destination);
+            var destinationFolder = environment.ExpandVariables(environment.GetFullPath(Destination));
 
-            if( !Directory.Exists(Destination) ) 
+            if (!Directory.Exists(destinationFolder)) 
             {
                 if (CreateFolder)
                 {
-                    Log.Info("Create folder {0}", Destination);
-                    if (!environment.IsSimulating) Directory.CreateDirectory(Destination);
+                    Log.Info("Create folder {0}", destinationFolder);
+                    if (!environment.IsSimulating) Directory.CreateDirectory(destinationFolder);
                 }
                 else
                 {
                     Log.Warning("Move {0}... Destination folder ({1}) doesn't exists",
-                        fsi.FullName, Destination);
+                        fsi.FullName, destinationFolder);
                     return;
                 }
             }
 
-            var destination = Path.Combine(Destination, fsi.Name);
+            var destination = Path.Combine(destinationFolder, fsi.Name);
 
             if (fsi is FileInfo)
             {
@@ -120,7 +119,7 @@ namespace RecursiveCleaner.Engine.Rules
                                 return;
                             }
 
-                            destination = Path.Combine(Destination, string.Format("{0} ({1}){2}", baseName, i, ext));
+                            destination = Path.Combine(destinationFolder, string.Format("{0} ({1}){2}", baseName, i, ext));
 
                             if (!File.Exists(destination)) break;
                         }
@@ -191,7 +190,7 @@ namespace RecursiveCleaner.Engine.Rules
                                 return;
                             }
 
-                            destination = Path.Combine(Destination, string.Format("{0} ({1}){2}", baseName, i, ext));
+                            destination = Path.Combine(destinationFolder, string.Format("{0} ({1}){2}", baseName, i, ext));
 
                             if (!Directory.Exists(destination)) break;
                         }
