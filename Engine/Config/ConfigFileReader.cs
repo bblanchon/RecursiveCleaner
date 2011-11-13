@@ -85,6 +85,9 @@ namespace RecursiveCleaner.Engine.Config
                 case "move":
                     rule = new MoveRule();
                     break;
+                case "rename":
+                    rule = new RenameRule();
+                    break;
                 default:                    
                     xml.Skip();
                     throw new IgnoredElementException(elementName);
@@ -95,11 +98,20 @@ namespace RecursiveCleaner.Engine.Config
             attributes.Get("Target", () => rule.Target);
             attributes.Get("ApplyToSubfolders", () => rule.AppliesToSubfolders);
 
-            if (rule is MoveRule)
+            if (rule is MoveRuleBase)
             {
-                attributes.Get("ifexists", () => ((MoveRule)rule).IfExists);
+                attributes.Get("ifexists", () => ((MoveRuleBase)rule).IfExists);
+            }
+
+            if( rule is MoveRule)
+            {
                 attributes.Get("destination", () => ((MoveRule)rule).Destination, true);
                 attributes.Get("createfolder", () => ((MoveRule)rule).CreateFolder);
+            }
+
+            if (rule is RenameRule)
+            {
+                attributes.Get("name", () => ((RenameRule)rule).Name, true);
             }
 
             attributes.AssertNoUnused();

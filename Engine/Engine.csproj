@@ -64,8 +64,10 @@
     <Compile Include="Rules\DeleteRule.cs" />
     <Compile Include="Rules\IgnoreRule.cs" />
     <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\MoveBaseRule.cs" />
     <Compile Include="Rules\MoveRule.cs" />
     <Compile Include="Rules\RecycleRule.cs" />
+    <Compile Include="Rules\RenameRule.cs" />
     <Compile Include="Rules\RuleBase.cs" />
     <Compile Include="Rules\RuleTarget.cs" />
     <Compile Include="Scanner.cs" />
