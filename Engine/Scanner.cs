@@ -86,7 +86,7 @@ namespace RecursiveCleaner.Engine
             {
                 CurrentDirectory = dir                       
             };
-
+            
             try
             {
                 //
@@ -96,7 +96,7 @@ namespace RecursiveCleaner.Engine
 
                 var folderRules = rules.Where(x => x.Target == RuleTarget.Folders || x.Target == RuleTarget.FilesAndFolders);
                 var fileRules = rules.Where(x => x.Target == RuleTarget.Files || x.Target == RuleTarget.FilesAndFolders);
-
+                
                 //
                 // 2. Scan folders
                 //
@@ -122,14 +122,14 @@ namespace RecursiveCleaner.Engine
                         ScanFolder(subFolder, rules.Where(x => x.AppliesToSubfolders), folderEnvironment);
                     }
                 }
-
+                
                 //
                 // 3. Scan files
                 //
                 if (fileRules.Any())
                 {
                     foreach (var file in dir.EnumerateFiles())
-                    {
+                    {                      
                         var fileEnvironment = new FileEnvironment(file, environment);
 
                         // skip system files
@@ -142,11 +142,16 @@ namespace RecursiveCleaner.Engine
 
                         // get first matching rule
                         var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file, fileEnvironment));
-                                                
+
                         if (matchingRule != null)
                         {
+                            Log.Debug("File \"{0}\" matches {1}", file.Name, matchingRule);
                             // apply the rule to the file
                             matchingRule.Apply(file, fileEnvironment);
+                        }
+                        else
+                        {
+                            Log.Debug("No match for file \"{0}\"", file.Name);
                         }
                     }
                 }
