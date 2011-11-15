@@ -21,15 +21,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
-    class WildcardsFilter : RegexFilter
+    using Environments;
+
+    class WildcardsFilter : IFilter
     {
+        readonly Regex regex;
+
         public WildcardsFilter(string pattern)
-            : base(BuildRegexPattern(pattern))
         {
+            regex = new Regex(BuildRegexPattern(pattern), RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
+
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
+        {
+            return regex.IsMatch(fsi.Name);
+        }
+
+        #region Wildcards --> Regex
 
         static string BuildRegexPattern(string pattern)
         {
@@ -47,5 +59,7 @@ namespace RecursiveCleaner.Engine.Filters
             { @"\?", "." },
             { @"\|", "$|^" },
         };
+        
+        #endregion
     }
 }

@@ -57,8 +57,8 @@
     <Compile Include="Filters\MatchingAllFilterTests.cs" />
     <Compile Include="Filters\OlderThanFilterTests.cs" />
     <Compile Include="Helpers\DummyFile.cs" />
-    <Compile Include="Filters\WildcardsFilterTests.cs" />
     <Compile Include="Filters\RegexFilterTests.cs" />
+    <Compile Include="Filters\WildcardsFilterTests.cs" />
     <Compile Include="Helpers\TemporaryFile.cs" />
     <Compile Include="Helpers\TemporaryFolder.cs" />
     <Compile Include="Helpers\XmlSample.cs" />

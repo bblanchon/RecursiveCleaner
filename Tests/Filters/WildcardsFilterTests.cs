@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-using System.Reflection;
-using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using System.Reflection;
+using System.IO;
 
 namespace RecursiveCleaner.Tests.Filters
 {
@@ -31,7 +31,7 @@ namespace RecursiveCleaner.Tests.Filters
     using Engine.Environments;
 
     [TestFixture]
-    class RegexFilterTests
+    class WildcardsFilterTests
     {
         Environment environment;
         IFilter filter;
@@ -40,7 +40,7 @@ namespace RecursiveCleaner.Tests.Filters
         public void SetUp()
         {
             environment = new Environment();
-            filter = new RegexFilter("^Match");
+            filter = new WildcardsFilter("Match*");
         }
 
         [Test]

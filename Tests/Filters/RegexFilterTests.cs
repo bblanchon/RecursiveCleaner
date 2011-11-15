@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+using System.Reflection;
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using System.Reflection;
-using System.IO;
 
 namespace RecursiveCleaner.Tests.Filters
 {
@@ -31,7 +31,7 @@ namespace RecursiveCleaner.Tests.Filters
     using Engine.Environments;
 
     [TestFixture]
-    class WildcardsFilterTests
+    class RegexFilterTests
     {
         Environment environment;
         IFilter filter;
@@ -40,21 +40,41 @@ namespace RecursiveCleaner.Tests.Filters
         public void SetUp()
         {
             environment = new Environment();
-            filter = new WildcardsFilter("Match*");
+            filter = new RegexFilter("^Match");
         }
 
         [Test]
-        public void TestMatch ()
+        public void Match ()
         {
             var file = new DummyFile("MatchingFile.txt");
             Assert.IsTrue(filter.IsMatch(file, environment));
         }
 
         [Test]
-        public void TestNonMatch()
+        public void NonMatch()
         {
             var file = new DummyFile("NonMatchingFile.txt");
             Assert.IsFalse(filter.IsMatch(file, environment));
+        }
+
+        [Test]
+        public void NamedGroup()
+        {
+            var environment = new Environment();
+            var filter = new RegexFilter(@"^file(?<number>\d+)\.txt$");
+            var file = new DummyFile("file456.txt");
+            filter.IsMatch(file, environment);
+            Assert.AreEqual("456", environment.Get("number"));
+        }
+
+        [Test]
+        public void UnnamedGroup()
+        {
+            var environment = new Environment();
+            var filter = new RegexFilter(@"^file(\d+)\.txt$");
+            var file = new DummyFile("file456.txt");
+            filter.IsMatch(file, environment);
+            Assert.AreEqual("456", environment.Get("1"));
         }
     }
 }

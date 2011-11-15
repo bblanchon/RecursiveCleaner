@@ -27,14 +27,30 @@ namespace RecursiveCleaner.Engine.Filters
     {
         public RegexFilter(string pattern)
         {
-            regex = new Regex(pattern, RegexOptions.Compiled);
+            regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         readonly Regex regex;
 
         public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
-            return regex.IsMatch(fsi.Name);
+            var m = regex.Match(fsi.Name);
+
+            if (!m.Success) return false;
+
+            foreach( var groupName in regex.GetGroupNames() )
+            {   
+                var group = m.Groups[groupName];
+
+                Log.Debug("Groups[\"{0}\"] = {1}", groupName, group);
+
+                if (group.Success)
+                {
+                    environment.Add(groupName, group.Value);
+                }
+            }
+
+            return true;
         }
     }
 }
