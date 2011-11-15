@@ -38,9 +38,9 @@ namespace RecursiveCleaner.Engine.Rules
             AppliesToSubfolders = true;
         }
 
-        public bool IsMatch(FileSystemInfo fsi)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
-            return Filter.IsMatch(fsi);
+            return Filter.IsMatch(fsi, environment);
         }
 
         public abstract void Apply(FileSystemInfo fsi, Environment environment);

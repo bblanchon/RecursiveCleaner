@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using RecursiveCleaner.Engine.Filters;
-using RecursiveCleaner.Tests.Helpers;
 
 namespace RecursiveCleaner.Tests.Filters
 {
+    using Helpers;
+    using Engine.Filters;
+    using Engine.Environments;
+
     [TestFixture]
     class MatchingAllFilterTests
     {
+        static Environment environment = new Environment();
+
         [Test]
         public void AllTrue()
         {
@@ -22,7 +26,7 @@ namespace RecursiveCleaner.Tests.Filters
                     new DelegateFilter((x)=>true),
                 }
             };
-            Assert.IsTrue(filter.IsMatch(new DummyFile()));
+            Assert.IsTrue(filter.IsMatch(new DummyFile(), environment));
         }
 
         [Test]
@@ -36,7 +40,7 @@ namespace RecursiveCleaner.Tests.Filters
                     new DelegateFilter((x)=>false),
                 }
             };
-            Assert.IsFalse(filter.IsMatch(new DummyFile()));
+            Assert.IsFalse(filter.IsMatch(new DummyFile(), environment));
         }
 
         [Test]
@@ -50,7 +54,7 @@ namespace RecursiveCleaner.Tests.Filters
                     new DelegateFilter((x)=>false),
                 }
             };
-            Assert.IsFalse(filter.IsMatch(new DummyFile()));
+            Assert.IsFalse(filter.IsMatch(new DummyFile(), environment));
         }
     }
 }

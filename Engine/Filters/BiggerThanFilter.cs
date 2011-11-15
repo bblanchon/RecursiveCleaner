@@ -24,11 +24,13 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class BiggerThanFilter : IFilter
     {
         public long Size { get; set; }
 
-        public bool IsMatch(FileSystemInfo fsi)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
             if( fsi is FileInfo )
             {

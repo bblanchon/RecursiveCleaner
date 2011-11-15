@@ -6,11 +6,13 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class MatchingAnyFilter : ParentFilter
     {
-        public override bool IsMatch(FileSystemInfo fsi)
+        public override bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
-            return Children.Any(x => x.IsMatch(fsi));
+            return Children.Any(x => x.IsMatch(fsi, environment));
         }
     }
 }

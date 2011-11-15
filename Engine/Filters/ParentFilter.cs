@@ -17,12 +17,15 @@
  */
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     abstract class ParentFilter : IFilter
     {
         private IEnumerable<IFilter> children;
@@ -33,6 +36,6 @@ namespace RecursiveCleaner.Engine.Filters
             set { children = value.ToList(); }
         }
 
-        public abstract bool IsMatch(System.IO.FileSystemInfo fsi);
+        public abstract bool IsMatch(FileSystemInfo fsi, Environment environment);
     }    
 }

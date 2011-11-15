@@ -22,6 +22,8 @@ using System.Linq;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class OlderThanFilter : IFilter
     {
         public OlderThanFilter(int years, int months, int days, int hours, int minutes, int seconds)
@@ -35,7 +37,7 @@ namespace RecursiveCleaner.Engine.Filters
             private set;
         }
 
-        public bool IsMatch(FileSystemInfo fsi)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
             if (fsi is DirectoryInfo)
             {

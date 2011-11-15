@@ -109,7 +109,7 @@ namespace RecursiveCleaner.Engine
                         continue;
 
                     // find first matching rule
-                    var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder));
+                    var matchingRule = folderRules.FirstOrDefault(x => x.IsMatch(subFolder, folderEnvironment));
                                         
                     if (matchingRule != null)
                     {
@@ -141,7 +141,7 @@ namespace RecursiveCleaner.Engine
                             continue;
 
                         // get first matching rule
-                        var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file));
+                        var matchingRule = fileRules.FirstOrDefault(x => x.IsMatch(file, fileEnvironment));
                                                 
                         if (matchingRule != null)
                         {

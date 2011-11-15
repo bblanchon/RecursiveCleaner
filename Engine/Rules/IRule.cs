@@ -32,7 +32,7 @@ namespace RecursiveCleaner.Engine.Rules
 
         bool AppliesToSubfolders { set; get; }
 
-        bool IsMatch(FileSystemInfo fsi);
+        bool IsMatch(FileSystemInfo fsi, Environment environment);
 
         void Apply(FileSystemInfo fsi, Environment environment);
     }

@@ -24,11 +24,13 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class MatchingAllFilter : ParentFilter
     {
-        public override bool IsMatch(FileSystemInfo fsi)
+        public override bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
-            return Children.All(x => x.IsMatch(fsi));
+            return Children.All(x => x.IsMatch(fsi, environment));
         }
     }
 }

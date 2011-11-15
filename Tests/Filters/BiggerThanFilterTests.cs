@@ -20,20 +20,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RecursiveCleaner.Engine.Filters;
 using NUnit.Framework;
-using RecursiveCleaner.Tests.Helpers;
 
 namespace RecursiveCleaner.Tests.Filters
 {
+    using Helpers;
+    using Engine.Filters;
+    using Engine.Environments;
+
     [TestFixture]
     public class BiggerThanFilterTests
     {
         IFilter filter;
+        Environment environment;
 
         [SetUp]
         public void SetUp()
         {
+            environment = new Environment();
             filter = new BiggerThanFilter
             {
                 Size = 10
@@ -46,7 +50,7 @@ namespace RecursiveCleaner.Tests.Filters
             using (var file = new TemporaryFile())
             {
                 file.Contents = "0123456789";
-                Assert.IsTrue(filter.IsMatch(file.FileInfo));
+                Assert.IsTrue(filter.IsMatch(file.FileInfo, environment));
             }
         }
 
@@ -56,7 +60,7 @@ namespace RecursiveCleaner.Tests.Filters
             using (var file = new TemporaryFile())
             {
                 file.Contents = "01234";
-                Assert.IsFalse(filter.IsMatch(file.FileInfo));
+                Assert.IsFalse(filter.IsMatch(file.FileInfo, environment));
             }
         }
 
@@ -69,7 +73,7 @@ namespace RecursiveCleaner.Tests.Filters
                 {
                     file1.Contents = "01234";
                     file2.Contents = "56789";
-                    Assert.IsTrue(filter.IsMatch(folder.DirectoryInfo));
+                    Assert.IsTrue(filter.IsMatch(folder.DirectoryInfo, environment));
                 }
             }
         }
@@ -83,7 +87,7 @@ namespace RecursiveCleaner.Tests.Filters
                 {
                     file1.Contents = "0123";
                     file2.Contents = "5678";
-                    Assert.IsFalse(filter.IsMatch(folder.DirectoryInfo));
+                    Assert.IsFalse(filter.IsMatch(folder.DirectoryInfo, environment));
                 }
             }
         }

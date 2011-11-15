@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using RecursiveCleaner.Engine.Filters;
-/*
+﻿/*
  * RecursiveCleaner - Deletes files or folders according to filters defined in XML files.
  * Copyright (C) 2011 Benoit Blanchon
  *
@@ -24,18 +18,28 @@ using RecursiveCleaner.Engine.Filters;
 
 using System.Reflection;
 using System.IO;
-using RecursiveCleaner.Tests.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
 
 namespace RecursiveCleaner.Tests.Filters
 {
+    using Helpers;
+    using Engine.Filters;
+    using Engine.Environments;
+
     [TestFixture]
     class RegexFilterTests
     {
+        Environment environment;
         IFilter filter;
 
         [SetUp]
         public void SetUp()
         {
+            environment = new Environment();
             filter = new RegexFilter("^Match");
         }
 
@@ -43,14 +47,14 @@ namespace RecursiveCleaner.Tests.Filters
         public void TestMatch ()
         {
             var file = new DummyFile("MatchingFile.txt");
-            Assert.IsTrue(filter.IsMatch(file));
+            Assert.IsTrue(filter.IsMatch(file, environment));
         }
 
         [Test]
         public void TestNonMatch()
         {
             var file = new DummyFile("NonMatchingFile.txt");
-            Assert.IsFalse(filter.IsMatch(file));
+            Assert.IsFalse(filter.IsMatch(file, environment));
         }
     }
 }

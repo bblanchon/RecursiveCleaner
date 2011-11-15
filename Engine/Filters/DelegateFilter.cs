@@ -24,6 +24,8 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class DelegateFilter : IFilter
     {
         readonly Predicate<FileSystemInfo> condition;
@@ -33,7 +35,7 @@ namespace RecursiveCleaner.Engine.Filters
             this.condition = condition;
         }
 
-        public bool IsMatch(FileSystemInfo fsi)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
             return condition(fsi);
         }

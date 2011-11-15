@@ -20,8 +20,10 @@ using System.IO;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     interface IFilter
     {
-        bool IsMatch(FileSystemInfo fsi);
+        bool IsMatch(FileSystemInfo fsi, Environment environment);
     }
 }

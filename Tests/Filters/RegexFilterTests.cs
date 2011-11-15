@@ -21,21 +21,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using RecursiveCleaner.Engine.Filters;
 using System.Reflection;
 using System.IO;
-using RecursiveCleaner.Tests.Helpers;
 
 namespace RecursiveCleaner.Tests.Filters
 {
+    using Helpers;
+    using Engine.Filters;
+    using Engine.Environments;
+
     [TestFixture]
     class WildcardsFilterTests
     {
+        Environment environment;
         IFilter filter;
 
         [SetUp]
         public void SetUp()
         {
+            environment = new Environment();
             filter = new WildcardsFilter("Match*");
         }
 
@@ -43,14 +47,14 @@ namespace RecursiveCleaner.Tests.Filters
         public void TestMatch ()
         {
             var file = new DummyFile("MatchingFile.txt");
-            Assert.IsTrue(filter.IsMatch(file));
+            Assert.IsTrue(filter.IsMatch(file, environment));
         }
 
         [Test]
         public void TestNonMatch()
         {
             var file = new DummyFile("NonMatchingFile.txt");
-            Assert.IsFalse(filter.IsMatch(file));
+            Assert.IsFalse(filter.IsMatch(file, environment));
         }
     }
 }

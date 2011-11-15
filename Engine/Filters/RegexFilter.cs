@@ -21,6 +21,8 @@ using System.Text.RegularExpressions;
 
 namespace RecursiveCleaner.Engine.Filters
 {
+    using Environments;
+
     class RegexFilter : IFilter
     {
         public RegexFilter(string pattern)
@@ -30,7 +32,7 @@ namespace RecursiveCleaner.Engine.Filters
 
         readonly Regex regex;
 
-        public bool IsMatch(FileSystemInfo fsi)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
             return regex.IsMatch(fsi.Name);
         }
