@@ -20,8 +20,8 @@ namespace RecursiveCleaner.Engine.Rules
 {
     enum RuleTarget
     {
-        Folders,
-        Files,        
         FilesAndFolders,
+        Folders,
+        Files
     }
 }
