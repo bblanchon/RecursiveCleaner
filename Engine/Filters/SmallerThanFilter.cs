@@ -26,13 +26,13 @@ namespace RecursiveCleaner.Engine.Filters
 {
     using Environments;
 
-    class BiggerThanFilter : SizeFilter
+    class SmallerThanFilter : SizeFilter
     {
         public long Size { get; set; }
 
         protected override bool IsMatch(long size, Environment environment)
         {
-            return size >= Size;
+            return size <= Size;
         }
     }
 }

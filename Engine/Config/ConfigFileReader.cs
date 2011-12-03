@@ -177,6 +177,9 @@ namespace RecursiveCleaner.Engine.Config
                 case "matchingany":
                     filter = ReadMatchingAnyFilter(xml, attributes);
                     break;
+                case "smallerthan":
+                    filter = ReadSmallerThanFilter(xml, attributes);
+                    break;
                 default:                    
                     xml.Skip();
                     throw new IgnoredElementException(elementName);
@@ -199,6 +202,20 @@ namespace RecursiveCleaner.Engine.Config
             attributes.Get("tb", () => tb);
 
             return new BiggerThanFilter { Size = b + (kb << 10) + (mb << 20) + (tb << 30) };
+        }
+
+        private static IFilter ReadSmallerThanFilter(XmlReader xml, AttributeParser attributes)
+        {
+            if (attributes.Count == 0)
+                throw new AttributeMissingException("SmallerThan");
+
+            long b = 0, kb = 0, mb = 0, tb = 0;
+            attributes.Get("bytes", () => b);
+            attributes.Get("kb", () => kb);
+            attributes.Get("mb", () => mb);
+            attributes.Get("tb", () => tb);
+
+            return new SmallerThanFilter { Size = b + (kb << 10) + (mb << 20) + (tb << 30) };
         }
 
         private static IFilter ReadOlderThanFilter(XmlReader xml, AttributeParser attributes)

@@ -26,13 +26,23 @@ namespace RecursiveCleaner.Engine.Filters
 {
     using Environments;
 
-    class BiggerThanFilter : SizeFilter
+    abstract class SizeFilter : IFilter
     {
-        public long Size { get; set; }
+        protected abstract bool IsMatch(long size, Environment environment);
 
-        protected override bool IsMatch(long size, Environment environment)
+        public bool IsMatch(FileSystemInfo fsi, Environment environment)
         {
-            return size >= Size;
+            if( fsi is FileInfo )
+            {
+                return IsMatch(((FileInfo)fsi).Length, environment);
+            }
+
+            if (fsi is DirectoryInfo)
+            {
+                return IsMatch(((DirectoryInfo)fsi).EnumerateFiles("*", SearchOption.AllDirectories).Sum(x => x.Length), environment);
+            }
+
+            return false;
         }
     }
 }
