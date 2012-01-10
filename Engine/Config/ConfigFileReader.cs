@@ -180,6 +180,9 @@ namespace RecursiveCleaner.Engine.Config
                 case "smallerthan":
                     filter = ReadSmallerThanFilter(xml, attributes);
                     break;
+                case "empty":
+                    filter = ReadEmptyFilter(xml, attributes);
+                    break;
                 default:                    
                     xml.Skip();
                     throw new IgnoredElementException(elementName);
@@ -188,6 +191,11 @@ namespace RecursiveCleaner.Engine.Config
             attributes.AssertNoUnused();
 
             return filter;
+        }
+
+        private static IFilter ReadEmptyFilter(XmlReader xml, AttributeParser attributes)
+        {
+            return new EmptyFilter();
         }
 
         private static IFilter ReadBiggerThanFilter(XmlReader xml, AttributeParser attributes)

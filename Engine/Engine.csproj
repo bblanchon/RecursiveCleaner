@@ -49,6 +49,7 @@
     <Compile Include="Environments\Environment.cs" />
     <Compile Include="Environments\FileEnvironment.cs" />
     <Compile Include="Filters\BiggerThanFilter.cs" />
+    <Compile Include="Filters\EmptyFilter.cs" />
     <Compile Include="Filters\SmallerThanFilter.cs" />
     <Compile Include="Filters\SizeFilter.cs" />
     <Compile Include="Filters\DelegateFilter.cs" />

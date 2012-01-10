@@ -52,6 +52,8 @@
     <Compile Include="Config\InvalidFiles.cs" />
     <Compile Include="Config\SimpleConfigFiles.cs" />
     <Compile Include="Filters\BiggerThanFilterTests.cs" />
+    <Compile Include="Filters\EmptyXmlTest.cs" />
+    <Compile Include="Filters\EmptyFilterTests.cs" />
     <Compile Include="Filters\MatchingNoneFilterTests.cs" />
     <Compile Include="Filters\MatchingAnyFilterTests.cs" />
     <Compile Include="Filters\MatchingAllFilterTests.cs" />
