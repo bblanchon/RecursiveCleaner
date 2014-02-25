@@ -57,5 +57,25 @@ namespace RecursiveCleaner.Tests.Filters
                 Assert.IsFalse(filter.IsMatch(file.FileInfo, environment));
             }
         }
+
+        [Test]
+        public void OldFolder_IsMatch_ReturnsTrue()
+        {
+            using (var folder = new TemporaryFolder())
+            {
+                folder.DirectoryInfo.LastWriteTime = DateTime.Now.Subtract(TimeSpan.FromDays(2));
+                Assert.IsTrue(filter.IsMatch(folder.DirectoryInfo, environment));
+            }
+        }
+
+        [Test]
+        public void NewFolder_IsMatch_ReturnsFalse()
+        {
+            using (var folder = new TemporaryFolder())
+            {
+                folder.DirectoryInfo.LastWriteTime = DateTime.Now;
+                Assert.IsFalse(filter.IsMatch(folder.DirectoryInfo, environment));
+            }
+        }
     }
 }
