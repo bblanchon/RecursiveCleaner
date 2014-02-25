@@ -17,16 +17,19 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace RecursiveCleaner.Tests.Helpers
 {
     class TemporaryFile : IDisposable
-    {        
-        public TemporaryFile(string name="testfile.tmp")
+    {
+        public TemporaryFile()
+            : this(System.IO.Path.GetRandomFileName())
+        {
+            
+        }
+
+        public TemporaryFile(string name)
         {            
             FileInfo = new FileInfo(name);
             Console.WriteLine("Create file {0}", FileInfo.Name);
