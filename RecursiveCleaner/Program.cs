@@ -67,11 +67,7 @@ namespace RecursiveCleaner
 
             var scanner = new Scanner();
 
-#if DEBUG
-            scanner.IsSimulating = true;            
-#else
             scanner.IsSimulating = cmdLine.SimulationMode;
-#endif
 
             Log.Info("Started with arguments: {0}", string.Join(" ", cmdLine.Arguments));
 
