@@ -58,7 +58,7 @@ namespace RecursiveCleaner.Engine
 
         #region Private part
 
-        const string EventSource = "RecursiveCleaner";
+        const string EVENT_SOURCE = "RecursiveCleaner";
 
         private static void Print(LogLevel level, string format, params object[] args)
         {
@@ -67,17 +67,17 @@ namespace RecursiveCleaner.Engine
                 var s = string.Format(format, args);
 
                 if (LogToConsole) Console.WriteLine(s);
-                if (LogToEventLog) EventLog.WriteEntry(EventSource, s, levelMap[level], 1);
+                if (LogToEventLog) EventLog.WriteEntry(EVENT_SOURCE, s, levelMap[level], 1);
             }
         } 
 
-        static Dictionary<LogLevel,EventLogEntryType> levelMap = 
+        static readonly Dictionary<LogLevel,EventLogEntryType> levelMap = 
             new Dictionary<LogLevel,EventLogEntryType>
             {
-                { LogLevel.Error, EventLogEntryType.Error },
-                { LogLevel.Warning, EventLogEntryType.Warning },
-                { LogLevel.Info, EventLogEntryType.Information },
-                { LogLevel.Debug, EventLogEntryType.Information },
+                { LogLevel.Error,   EventLogEntryType.Error       },
+                { LogLevel.Warning, EventLogEntryType.Warning     },
+                { LogLevel.Info,    EventLogEntryType.Information },
+                { LogLevel.Debug,   EventLogEntryType.Information },
             };
 
         #endregion
