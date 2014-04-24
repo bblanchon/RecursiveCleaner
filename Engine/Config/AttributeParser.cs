@@ -31,52 +31,47 @@ namespace RecursiveCleaner.Engine.Config
         {
             elementName = xml.Name;
             dict = new Dictionary<string, AttributeInfo>(xml.AttributeCount);
-
-            if (xml.MoveToFirstAttribute())
-            {
-                do
-                {
-                    dict.Add(xml.Name.ToLower(), new AttributeInfo
-                    {
-                        Name = xml.Name,
-                        Value = xml.Value
-                    });
-
-                } while (xml.MoveToNextAttribute());
-            }
+            ReadXmlAttributes(xml);
         }
 
-        private AttributeInfo GetAttribute(string name)
+        void ReadXmlAttributes(XmlReader xml)
+        {
+            if (!xml.MoveToFirstAttribute())
+                return;
+            
+            do
+            {
+                dict.Add(xml.Name.ToLower(), new AttributeInfo { Name = xml.Name, Value = xml.Value });
+            }
+            while (xml.MoveToNextAttribute());
+        }
+
+        public AttributeInfo GetOptional(string name)
         {
             var key = name.ToLower();
-            return dict.ContainsKey(key) ? dict[key] : null;
+            
+            if (!dict.ContainsKey(key))
+                return null;
+
+            var attr = dict[key];
+            attr.HasBeenUsed = true;
+            return attr;
         }
-        
+
         public AttributeInfo GetMandatory(string attributeName)
         {
-            var attr = GetAttribute(attributeName);
+            var attr = GetOptional(attributeName);
 
             if (attr == null)
                 throw new AttributeMissingException(elementName, attributeName);
 
-            attr.HasBeenUsed = true;
-
             return attr;
         }
 
-        public AttributeInfo GetOptional(string attributeName)
+        public void AssertNotEmpty()
         {
-            var attr = GetAttribute(attributeName);
-
-            if (attr != null)
-                attr.HasBeenUsed = true;
-
-            return attr;
-        }
-
-        public int Count
-        {
-            get { return dict.Count; }
+            if (dict.Count == 0)
+                throw new AttributeMissingException(elementName);
         }
 
         public void AssertNoUnused()

@@ -199,8 +199,7 @@ namespace RecursiveCleaner.Engine.Config
 
         private static IFilter ReadBiggerThanFilter(XmlReader xml, AttributeParser attributes)
         {
-            if (attributes.Count == 0)
-                throw new AttributeMissingException("BiggerThan");
+            attributes.AssertNotEmpty();
 
             var b = attributes.GetOptional("bytes").AsLong(0);
             var kb = attributes.GetOptional("kb").AsLong(0);
@@ -212,8 +211,7 @@ namespace RecursiveCleaner.Engine.Config
 
         private static IFilter ReadSmallerThanFilter(XmlReader xml, AttributeParser attributes)
         {
-            if (attributes.Count == 0)
-                throw new AttributeMissingException("SmallerThan");
+            attributes.AssertNotEmpty();
 
             var b  = attributes.GetOptional("bytes").AsLong(0);
             var kb = attributes.GetOptional("kb").AsLong(0);
@@ -225,8 +223,7 @@ namespace RecursiveCleaner.Engine.Config
 
         private static IFilter ReadOlderThanFilter(XmlReader xml, AttributeParser attributes)
         {
-            if (attributes.Count == 0)
-                throw new Exception("Attribute missing in <OlderThan>");
+            attributes.AssertNotEmpty();
 
             var years   = attributes.GetOptional("years").AsInt(0);
             var months  = attributes.GetOptional("months").AsInt(0);
