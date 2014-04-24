@@ -93,23 +93,24 @@ namespace RecursiveCleaner.Engine.Config
 
             var attributes = new AttributeParser(xml);
 
-            attributes.Get("Target", () => rule.Target);
-            attributes.Get("ApplyToSubfolders", () => rule.AppliesToSubfolders);
-
+            rule.Target              = attributes.GetOptional("Target").AsEnum(RuleTarget.FilesAndFolders);
+            rule.AppliesToSubfolders = attributes.GetOptional("ApplyToSubfolders").AsBool(true);
+           
             if (rule is MoveRuleBase)
             {
-                attributes.Get("ifexists", () => ((MoveRuleBase)rule).IfExists);
+                ((MoveRuleBase)rule).IfExists =
+                    attributes.GetOptional("ifexists").AsEnum(MoveRuleBase.IfExistsMode.Cancel);
             }
 
             if( rule is MoveRule)
             {
-                attributes.Get("destination", () => ((MoveRule)rule).Destination, true);
-                attributes.Get("createfolder", () => ((MoveRule)rule).CreateFolder);
+                ((MoveRule)rule).Destination = attributes.GetMandatory("destination").AsString();
+                ((MoveRule)rule).CreateFolder = attributes.GetOptional("createfolder").AsBool(true);
             }
 
             if (rule is RenameRule)
             {
-                attributes.Get("name", () => ((RenameRule)rule).Name, true);
+                ((RenameRule)rule).Name = attributes.GetMandatory("name").AsString();
             }
 
             attributes.AssertNoUnused();
@@ -118,10 +119,10 @@ namespace RecursiveCleaner.Engine.Config
             {
                 var filters = ReadFilters(xml).ToArray();
 
-                if (filters.Count() == 0)
+                if (filters.Length == 0)
                     throw new Exception("You must specificy a filter for this rule");
-                
-                if (filters.Count() > 1)
+
+                if (filters.Length > 1)
                     throw new Exception("You can only specify one filter at rule's root. Please use <MatchingAll>, <MatchingAny> or <MatchingNone>.");
 
                 rule.Filter = filters.First();
@@ -201,11 +202,10 @@ namespace RecursiveCleaner.Engine.Config
             if (attributes.Count == 0)
                 throw new AttributeMissingException("BiggerThan");
 
-            long b=0, kb=0, mb=0, tb=0;
-            attributes.Get("bytes", () => b);
-            attributes.Get("kb", () => kb);
-            attributes.Get("mb", () => mb);
-            attributes.Get("tb", () => tb);
+            var b = attributes.GetOptional("bytes").AsLong(0);
+            var kb = attributes.GetOptional("kb").AsLong(0);
+            var mb = attributes.GetOptional("mb").AsLong(0);
+            var tb = attributes.GetOptional("tb").AsLong(0);
 
             return new BiggerThanFilter { Size = b + (kb << 10) + (mb << 20) + (tb << 30) };
         }
@@ -215,11 +215,10 @@ namespace RecursiveCleaner.Engine.Config
             if (attributes.Count == 0)
                 throw new AttributeMissingException("SmallerThan");
 
-            long b = 0, kb = 0, mb = 0, tb = 0;
-            attributes.Get("bytes", () => b);
-            attributes.Get("kb", () => kb);
-            attributes.Get("mb", () => mb);
-            attributes.Get("tb", () => tb);
+            var b  = attributes.GetOptional("bytes").AsLong(0);
+            var kb = attributes.GetOptional("kb").AsLong(0);
+            var mb = attributes.GetOptional("mb").AsLong(0);
+            var tb = attributes.GetOptional("tb").AsLong(0);
 
             return new SmallerThanFilter { Size = b + (kb << 10) + (mb << 20) + (tb << 30) };
         }
@@ -229,26 +228,22 @@ namespace RecursiveCleaner.Engine.Config
             if (attributes.Count == 0)
                 throw new Exception("Attribute missing in <OlderThan>");
 
-            int years=0, months=0, days=0, hours=0, minutes=0, seconds=0, weeks=0;
-
-            attributes.Get("years", () => years);
-            attributes.Get("months", () => months);
-            attributes.Get("weeks", () => weeks);
-            attributes.Get("days", () => days);
-            attributes.Get("hours", () => hours);
-            attributes.Get("minutes", () => minutes);
-            attributes.Get("seconds", () => seconds);            
+            var years   = attributes.GetOptional("years").AsInt(0);
+            var months  = attributes.GetOptional("months").AsInt(0);
+            var weeks   = attributes.GetOptional("weeks").AsInt(0);
+            var days    = attributes.GetOptional("days").AsInt(0);
+            var hours   = attributes.GetOptional("hours").AsInt(0);
+            var minutes = attributes.GetOptional("minutes").AsInt(0);
+            var seconds = attributes.GetOptional("seconds").AsInt(0);      
 
             return new OlderThanFilter(years, months, days+7*weeks, hours, minutes, seconds);
         }
 
         private static IFilter ReadRegexFilter(XmlReader xml, AttributeParser attributes)
         {
-            string pattern = null;
+            var pattern = attributes.GetOptional("pattern").AsString();
 
-            attributes.Get("pattern", () => pattern);
-
-            if( string.IsNullOrEmpty(pattern) )
+            if (string.IsNullOrEmpty(pattern))
                 pattern = xml.ReadElementContentAsString();
 
             return new RegexFilter(pattern);
@@ -256,9 +251,7 @@ namespace RecursiveCleaner.Engine.Config
 
         private static IFilter ReadWildcardsFilter(XmlReader xml, AttributeParser attributes)
         {
-            string pattern = null;
-
-            attributes.Get("pattern", () => pattern);
+            var pattern = attributes.GetOptional("pattern").AsString();
 
             if (string.IsNullOrEmpty(pattern))
                 pattern = xml.ReadElementContentAsString();
